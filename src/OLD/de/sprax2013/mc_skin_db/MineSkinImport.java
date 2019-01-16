@@ -14,8 +14,8 @@ import com.google.gson.JsonParser;
 
 import OLD.de.sprax2013.mc_skin_db.skin.Skin;
 import OLD.de.sprax2013.mc_skin_db.util.DownloadUtils;
-import OLD.de.sprax2013.mc_skin_db.util.HashingUtils;
-import OLD.de.sprax2013.mc_skin_db.util.RemoteDatabaseUtils;
+import de.sprax2013.skindb.back_end.utils.HashingUtils;
+import de.sprax2013.skindb.back_end.utils.RemoteDatabaseUtils;
 
 public class MineSkinImport {
 	static final boolean FORCE_FULL_UPDATE = false;

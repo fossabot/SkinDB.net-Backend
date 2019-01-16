@@ -3,7 +3,7 @@ package OLD.de.sprax2013.mc_skin_db.skin;
 import java.util.HashSet;
 import java.util.Set;
 
-import OLD.de.sprax2013.mc_skin_db.util.RemoteDatabaseUtils;
+import de.sprax2013.skindb.back_end.utils.RemoteDatabaseUtils;
 
 public class Skin {
 	private final int id;

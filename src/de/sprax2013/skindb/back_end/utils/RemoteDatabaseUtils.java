@@ -1,4 +1,4 @@
-package OLD.de.sprax2013.mc_skin_db.util;
+package de.sprax2013.skindb.back_end.utils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -22,7 +22,7 @@ import OLD.de.sprax2013.mc_skin_db.skin.Skin;
 import OLD.de.sprax2013.mc_skin_db.skin.Tag;
 import OLD.de.sprax2013.mc_skin_db.skin.TagManager;
 import OLD.de.sprax2013.mc_skin_db.util.DownloadUtils;
-import OLD.de.sprax2013.mc_skin_db.util.RemoteDatabaseUtils;
+import de.sprax2013.skindb.back_end.utils.RemoteDatabaseUtils;
 
 public class GUI {
 	private static JFrame frmMcSkinDB;

@@ -9,11 +9,11 @@ import java.util.UUID;
 
 import OLD.de.sprax2013.mc_skin_db.skin.Skin;
 import OLD.de.sprax2013.mc_skin_db.util.DownloadUtils;
-import OLD.de.sprax2013.mc_skin_db.util.HashingUtils;
-import OLD.de.sprax2013.mc_skin_db.util.RemoteDatabaseUtils;
 import de.sprax2013.advanced_dev_utils.misc.UUIDUtils;
 import de.sprax2013.advanced_dev_utils.mojang.MojangAPI;
 import de.sprax2013.advanced_dev_utils.mojang.MojangProfile;
+import de.sprax2013.skindb.back_end.utils.HashingUtils;
+import de.sprax2013.skindb.back_end.utils.RemoteDatabaseUtils;
 
 public class AddToDatabase {
 	private static final File file = new File("C:\\Users\\Christian\\Desktop\\skinURLs.txt");

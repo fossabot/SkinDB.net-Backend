@@ -3,7 +3,7 @@ package OLD.de.sprax2013.mc_skin_db.skin;
 import java.util.ArrayList;
 import java.util.List;
 
-import OLD.de.sprax2013.mc_skin_db.util.RemoteDatabaseUtils;
+import de.sprax2013.skindb.back_end.utils.RemoteDatabaseUtils;
 
 public class TagManager {
 	private static List<Tag> tags;
