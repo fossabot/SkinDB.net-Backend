@@ -1,6 +1,8 @@
 package de.sprax2013.skindb.back_end;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,20 +13,30 @@ import javax.imageio.ImageIO;
 
 public class SkinExtractionTest {
 //	static final File orgSkinFile = new File("C:\\Users\\Christian\\Desktop\\a614ad9427c16d0ded6f6bd0fa18c9121667bda6a7ddc7902799d36584ee5773.png");
-	static final File orgSkinFile = new File("C:\\Users\\Christian\\Desktop\\black.png");
+	static final File orgSkinFile = new File(System.getProperty("user.home"),
+			"Desktop" + File.separator + "Skin-Kopie.png");
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 //		getCleanSkin(ImageIO.read(orgSkinFile));
 
 		int x = 50, y = 16, w = 2, h = 4;
 
-		for (int i = 0; i < w; i++) {
-			System.out.println("(" + (x + i) + "|" + y + ")");
-		}
+		BufferedImage img = getCleanSkin(ImageIO.read(orgSkinFile));
+		Graphics2D graph = img.createGraphics();
+
+		graph.setColor(Color.GREEN);
 
 		for (int i = 0; i < h; i++) {
-			System.out.println("(" + x + "|" + (y + i) + ")");
+			for (int i2 = 0; i2 < w; i2++) {
+				graph.fillRect(x + i2, y + i, 1, 1);
+
+				System.out.println("(" + (x + i2) + "|" + (y + i) + ")");
+			}
 		}
+
+		graph.dispose();
+
+		ImageIO.write(img, "PNG", new File(orgSkinFile.getParentFile(), "newSkin.png"));
 	}
 
 	public static BufferedImage getSkin(String skinURL) {
