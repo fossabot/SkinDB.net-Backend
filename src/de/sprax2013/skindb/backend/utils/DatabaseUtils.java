@@ -170,6 +170,30 @@ public class DatabaseUtils {
 		return result;
 	}
 
+	public static Skin getSkin(boolean uniqueOnly, int offset) {
+		try (PreparedStatement pS = getConnection().prepareStatement(
+				"SELECT * FROM `Skins`" + (uniqueOnly ? " WHERE `DuplicateOf` IS NULL" : "") + " LIMIT 1 OFFSET ?;")) {
+			pS.setInt(1, offset);
+
+			ResultSet rs = pS.executeQuery();
+
+			if (rs.next()) {
+				Integer duplicateOf = rs.getInt("DuplicateOf");
+				if (rs.wasNull()) {
+					duplicateOf = null;
+				}
+
+				return new Skin(rs.getInt("ID"), rs.getString("MojangURL"), rs.getString("Hash"),
+						rs.getBoolean("4px-Arms"), duplicateOf);
+
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+
+		return null;
+	}
+
 	public static Skin getSkin(String hash) {
 		try (PreparedStatement pS = getConnection()
 				.prepareStatement("SELECT * FROM `Skins` WHERE `Hash` = ? LIMIT 1;")) {
@@ -205,7 +229,12 @@ public class DatabaseUtils {
 
 			pS.setString(2, skin.getMojangURL());
 			pS.setString(3, skin.getHash());
-			pS.setBoolean(4, skin.has4pxArms());
+
+			if (skin.has4pxArms()) {
+				pS.setBoolean(4, skin.has4pxArms());
+			} else {
+				pS.setNull(4, Types.NULL);
+			}
 
 			if (skin.isDuplicate()) {
 				pS.setInt(5, skin.getDuplicateOf());

@@ -18,6 +18,7 @@ import de.sprax2013.skindb.backend.constructors.Pending;
 import de.sprax2013.skindb.backend.constructors.PendingStatus;
 import de.sprax2013.skindb.backend.constructors.Skin;
 import de.sprax2013.skindb.backend.utils.DatabaseUtils;
+import de.sprax2013.skindb.backend.utils.SkinAssetUtils;
 import de.sprax2013.skindb.backend.utils.SkinUtils;
 
 public class PendingManager {
@@ -88,6 +89,12 @@ public class PendingManager {
 														pending.setStatus(PendingStatus.DUPLICATE);
 													} else {
 														pending.setStatus(PendingStatus.SUCCESS);
+													}
+
+													try {
+														SkinAssetUtils.create(skin, img);
+													} catch (Throwable th) {
+														th.printStackTrace();
 													}
 
 													pending.setSkinID(skin.getID());

@@ -13,23 +13,27 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class MineSkinUtils {
-	private static final int SIZE = 8;
+	private static final int SIZE = 16;
 
-	public static void provideAllMineSkin() {
+	public static void importMineSkin() {
 		try {
 			Response res = getResponse("https://api.mineskin.org/get/list/?size=0");
 
 			if (res != null && res.statusCode() == 200) {
 				final int total = ((JsonObject) new JsonParser().parse(res.body())).get("page").getAsJsonObject()
 						.get("total").getAsInt();
-				int pages = (total / 64);
+				int pages = (total / 16);
 
-				if (total % 64 != 0) {
-					pages++;
+				if (pages > 25) {
+					pages = 25;
 				}
 
+//				if (total % 16 != 0) {
+//					pages++;
+//				}
+
 				for (int i = 1; i <= pages; i++) {
-					System.out.println("Page " + i + " of " + pages + "[" + round((i / pages) * 100) + "%]");
+					System.out.println("Page " + i + " of " + pages + "[" + round((i / (double) pages) * 100) + "%]");
 
 					res = getResponse("http://api.mineskin.org/get/list/" + i + "?size=" + SIZE);
 
