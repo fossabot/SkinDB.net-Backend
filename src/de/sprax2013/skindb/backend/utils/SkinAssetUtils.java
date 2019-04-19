@@ -1,5 +1,6 @@
 package de.sprax2013.skindb.backend.utils;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class SkinAssetUtils {
 							skinImg = ImageIO.read(new URL(skin.getMojangURL()));
 						}
 
-						ImageIO.write(skinImg, "PNG", orgSkin);
+						ImageIO.write(copyImage(skinImg, BufferedImage.TYPE_4BYTE_ABGR), "PNG", orgSkin);
 					}
 
 					if (!cleanSkin.exists()) {
@@ -98,5 +99,15 @@ public class SkinAssetUtils {
 		}
 
 		return assetDir;
+	}
+
+	private static BufferedImage copyImage(BufferedImage src, int imgType) {
+		BufferedImage result = new BufferedImage(src.getWidth(), src.getHeight(), imgType);
+
+		Graphics g = result.createGraphics();
+		g.drawImage(src, 0, 0, null);
+		g.dispose();
+
+		return result;
 	}
 }

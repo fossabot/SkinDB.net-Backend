@@ -74,16 +74,16 @@ public class PendingManager {
 												File newTmpFile = File.createTempFile("SkinDB-Backend_", ".png");
 												ImageIO.write(newImg, "PNG", newTmpFile);
 
-												String hash = HashingUtils.getHash(newTmpFile);
-												boolean has4pxArms = SkinUtils.has4pxArms(newImg);
+												String cleanHash = HashingUtils.getHash(newTmpFile);
 
 												newTmpFile.delete();
 
 												System.out.println("Saving a new Skin for ID " + pending.getID());
-												new Skin(url.toString(), hash, has4pxArms,
-														DatabaseUtils.getDuplicate(hash)).save();
+												new Skin(url.toString(), cleanHash, SkinUtils.hasOverlay(newImg),
+														SkinUtils.hasSteveArms(newImg),
+														DatabaseUtils.getDuplicate(cleanHash)).save();
 
-												Skin skin = DatabaseUtils.getSkin(hash);
+												Skin skin = DatabaseUtils.getSkin(cleanHash);
 												if (skin != null) {
 													if (skin.isDuplicate()) {
 														pending.setStatus(PendingStatus.DUPLICATE);
@@ -109,6 +109,7 @@ public class PendingManager {
 										th.printStackTrace();
 
 										pending.setSkinID(null);
+										pending.setStatus(PendingStatus.UNKNOWN_ERROR);
 									}
 
 									System.out.println("Saving changes of PendingID " + pending.getID());

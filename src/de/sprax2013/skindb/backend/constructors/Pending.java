@@ -3,7 +3,7 @@ package de.sprax2013.skindb.backend.constructors;
 import de.sprax2013.skindb.backend.utils.DatabaseUtils;
 
 public class Pending {
-	private final int id;
+	private final Integer id;
 
 	private final PendingData data;
 	private Integer skinID;
@@ -11,7 +11,7 @@ public class Pending {
 
 	private PendingStatus status;
 
-	public Pending(int id, String data, Integer skinID, String userAgent, PendingStatus status) {
+	public Pending(Integer id, String data, Integer skinID, String userAgent, PendingStatus status) {
 		this.id = id;
 
 		this.data = new PendingData(data);
@@ -19,6 +19,10 @@ public class Pending {
 		this.userAgent = userAgent;
 
 		this.status = status;
+	}
+
+	public boolean hasID() {
+		return this.id != null;
 	}
 
 	public int getID() {

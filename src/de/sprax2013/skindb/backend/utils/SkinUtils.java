@@ -1,7 +1,9 @@
 package de.sprax2013.skindb.backend.utils;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -700,25 +702,76 @@ public class SkinUtils {
 	public static BufferedImage toCleanSkin(BufferedImage img) {
 		BufferedImage newImg = new BufferedImage(64, 64, IMAGE_TYPE);
 
+		// Transparent background
+		Graphics2D g = newImg.createGraphics();
+		g.setComposite(AlphaComposite.Clear);
+		g.fillRect(0, 0, 64, 64);
+		g.dispose();
+
+		boolean hasOverlay = hasOverlay(img);
+
 		for (Point p : SKIN_3PX) {
-			newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), false).getRGB());
-		}
-
-		for (Point p : SKIN_3PX_OVERLAY) {
-			newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), true).getRGB());
-		}
-
-		if (has4pxArms(img)) {
-			for (Point p : SKIN_4PX_DIFF) {
+			if (p.x < img.getWidth() && p.y < img.getHeight()) {
 				newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), false).getRGB());
 			}
+		}
 
-			for (Point p : SKIN_4PX_OVERLAY_DIFF) {
+		if (hasOverlay) {
+			for (Point p : SKIN_3PX_OVERLAY) {
 				newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), true).getRGB());
 			}
 		}
 
+		if (hasSteveArms(img)) {
+			for (Point p : SKIN_4PX_DIFF) {
+				if (p.x < img.getWidth() && p.y < img.getHeight()) {
+					newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), false).getRGB());
+				}
+			}
+
+			if (hasOverlay) {
+				for (Point p : SKIN_4PX_OVERLAY_DIFF) {
+					newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), true).getRGB());
+				}
+			}
+		}
+
 		return newImg;
+	}
+
+	/**
+	 * Checks if a skin has an overlay.<br>
+	 * If any of the overlay-pixels are not 100% transparent, the skin is considered
+	 * as having an overlay.
+	 *
+	 * @param img The Skin-Image to check
+	 * 
+	 * @return true, if it has an overlay
+	 * 
+	 * @see #hasSkinDimensions(BufferedImage)
+	 */
+	public static boolean hasOverlay(BufferedImage img) {
+		boolean has4pxArms = false;
+
+		if (img.getHeight() >= 64) {
+			for (Point p : SKIN_3PX_OVERLAY) {
+				if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
+					has4pxArms = true;
+					break;
+				}
+			}
+
+			if (!has4pxArms) {
+				for (Point p : SKIN_4PX_OVERLAY_DIFF) {
+					if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
+						has4pxArms = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return has4pxArms;
 	}
 
 	/**
@@ -732,21 +785,25 @@ public class SkinUtils {
 	 * 
 	 * @see #hasSkinDimensions(BufferedImage)
 	 */
-	public static boolean has4pxArms(BufferedImage img) {
+	public static boolean hasSteveArms(BufferedImage img) {
 		boolean has4pxArms = false;
 
 		for (Point p : SKIN_4PX_DIFF) {
-			if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
-				has4pxArms = true;
-				break;
+			if (p.x < img.getWidth() && p.y < img.getHeight()) {
+				if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
+					has4pxArms = true;
+					break;
+				}
 			}
 		}
 
 		if (!has4pxArms) {
 			for (Point p : SKIN_4PX_OVERLAY_DIFF) {
-				if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
-					has4pxArms = true;
-					break;
+				if (p.x < img.getWidth() && p.y < img.getHeight()) {
+					if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
+						has4pxArms = true;
+						break;
+					}
 				}
 			}
 		}
@@ -762,6 +819,6 @@ public class SkinUtils {
 	 * @return true, if the dimensions are official and supported
 	 */
 	public static boolean hasSkinDimensions(BufferedImage img) {
-		return img.getWidth() == 64 && img.getHeight() == 64;
+		return img.getWidth() == 64 && (img.getHeight() == 64 || img.getHeight() == 32);
 	}
 }
