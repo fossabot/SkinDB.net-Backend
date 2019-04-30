@@ -1,5 +1,7 @@
 package de.sprax2013.skindb.backend.constructors;
 
+import java.sql.Timestamp;
+
 import de.sprax2013.skindb.backend.utils.DatabaseUtils;
 
 public class Skin {
@@ -7,30 +9,36 @@ public class Skin {
 
 	private final String mojangURL;
 
-	private final String hash;
+	private final String cleanHash;
 
-	private boolean has4pxArms;
+	private boolean hasOverlay, hasSteveArms;
 
 	private final Integer duplicateOf;
 
-	public Skin(int id, String mojangURL, String hash, boolean has4pxArms) {
-		this(id, mojangURL, hash, has4pxArms, -1);
+	private final Timestamp knownSince;
+
+//	public Skin(int id, String mojangURL, String cleanHash, boolean hasOverlay, boolean hasSteveArms) {
+//		this(id, mojangURL, cleanHash, hasOverlay, hasSteveArms, null, null);
+//	}
+
+	public Skin(String mojangURL, String cleanHash, boolean hasOverlay, boolean hasSteveArms, Integer duplicateOf) {
+		this(-1, mojangURL, cleanHash, hasOverlay, hasSteveArms, duplicateOf, null);
 	}
 
-	public Skin(String mojangURL, String hash, boolean has4pxArms, Integer duplicateOf) {
-		this(-1, mojangURL, hash, has4pxArms, duplicateOf);
-	}
-
-	public Skin(int id, String mojangURL, String hash, boolean has4pxArms, Integer duplicateOf) {
+	public Skin(int id, String mojangURL, String cleanHash, boolean hasOverlay, boolean hasSteveArms,
+			Integer duplicateOf, Timestamp knownSince) {
 		this.id = id;
 
 		this.mojangURL = mojangURL;
 
-		this.hash = hash;
+		this.cleanHash = cleanHash;
 
-		this.has4pxArms = has4pxArms;
+		this.hasOverlay = hasOverlay;
+		this.hasSteveArms = hasSteveArms;
 
 		this.duplicateOf = duplicateOf;
+
+		this.knownSince = knownSince;
 	}
 
 	public boolean hasID() {
@@ -45,24 +53,36 @@ public class Skin {
 		return this.mojangURL;
 	}
 
-	public String getHash() {
-		return this.hash;
+	public String getCleanHash() {
+		return this.cleanHash;
 	}
 
-	public void has4pxArms(boolean has4pxArms) {
-		this.has4pxArms = has4pxArms;
+	public void hasOverlay(boolean hasOverlay) {
+		this.hasOverlay = hasOverlay;
 	}
 
-	public boolean has4pxArms() {
-		return this.has4pxArms;
+	public boolean hasOverlay() {
+		return this.hasOverlay;
+	}
+
+	public void hasSteveArms(boolean hasSteveArms) {
+		this.hasSteveArms = hasSteveArms;
+	}
+
+	public boolean hasSteveArms() {
+		return this.hasSteveArms;
 	}
 
 	public boolean isDuplicate() {
-		return this.duplicateOf != null;
+		return this.duplicateOf != null && this.duplicateOf >= 0;
 	}
 
 	public Integer getDuplicateOf() {
 		return this.duplicateOf;
+	}
+
+	public Timestamp getKnownSince() {
+		return this.knownSince;
 	}
 
 	public void save() {

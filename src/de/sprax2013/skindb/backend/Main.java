@@ -9,6 +9,8 @@ import java.util.Properties;
 import de.sprax2013.advanced_dev_utils.mysql.MySQLAPI;
 
 public class Main {
+	public final static String VERSION = "1.0";
+
 	private static Properties props;
 
 	public static void main(String[] args) {

@@ -1,14 +1,10 @@
 package de.sprax2013.skindb.backend.utils;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Desktop;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
 
 // TODO Add Support for notch's skin
 
@@ -665,27 +661,191 @@ public class SkinUtils {
 					new Point(63, 54), new Point(63, 55), new Point(63, 56), new Point(63, 57), new Point(63, 58),
 					new Point(63, 59), new Point(63, 60), new Point(63, 61), new Point(63, 62), new Point(63, 63) };
 
+	// Duplicates from SKIN_3PX etc.
+	private static final Point[] LEGACY_ARM = { new Point(40, 20), new Point(40, 21), new Point(40, 22),
+			new Point(40, 23), new Point(40, 24), new Point(40, 25), new Point(40, 26), new Point(40, 27),
+			new Point(40, 28), new Point(40, 29), new Point(40, 30), new Point(40, 31), new Point(41, 20),
+			new Point(41, 21), new Point(41, 22), new Point(41, 23), new Point(41, 24), new Point(41, 25),
+			new Point(41, 26), new Point(41, 27), new Point(41, 28), new Point(41, 29), new Point(41, 30),
+			new Point(41, 31), new Point(42, 20), new Point(42, 21), new Point(42, 22), new Point(42, 23),
+			new Point(42, 24), new Point(42, 25), new Point(42, 26), new Point(42, 27), new Point(42, 28),
+			new Point(42, 29), new Point(42, 30), new Point(42, 31), new Point(43, 20), new Point(43, 21),
+			new Point(43, 22), new Point(43, 23), new Point(43, 24), new Point(43, 25), new Point(43, 26),
+			new Point(43, 27), new Point(43, 28), new Point(43, 29), new Point(43, 30), new Point(43, 31),
+			new Point(44, 16), new Point(44, 17), new Point(44, 18), new Point(44, 19), new Point(44, 20),
+			new Point(44, 21), new Point(44, 22), new Point(44, 23), new Point(44, 24), new Point(44, 25),
+			new Point(44, 26), new Point(44, 27), new Point(44, 28), new Point(44, 29), new Point(44, 30),
+			new Point(44, 31), new Point(45, 16), new Point(45, 17), new Point(45, 18), new Point(45, 19),
+			new Point(45, 20), new Point(45, 21), new Point(45, 22), new Point(45, 23), new Point(45, 24),
+			new Point(45, 25), new Point(45, 26), new Point(45, 27), new Point(45, 28), new Point(45, 29),
+			new Point(45, 30), new Point(45, 31), new Point(46, 16), new Point(46, 17), new Point(46, 18),
+			new Point(46, 19), new Point(46, 20), new Point(46, 21), new Point(46, 22), new Point(46, 23),
+			new Point(46, 24), new Point(46, 25), new Point(46, 26), new Point(46, 27), new Point(46, 28),
+			new Point(46, 29), new Point(46, 30), new Point(46, 31), new Point(47, 16), new Point(47, 17),
+			new Point(47, 18), new Point(47, 19), new Point(47, 20), new Point(47, 21), new Point(47, 22),
+			new Point(47, 23), new Point(47, 24), new Point(47, 25), new Point(47, 26), new Point(47, 27),
+			new Point(47, 28), new Point(47, 29), new Point(47, 30), new Point(47, 31), new Point(48, 16),
+			new Point(48, 17), new Point(48, 18), new Point(48, 19), new Point(48, 20), new Point(48, 21),
+			new Point(48, 22), new Point(48, 23), new Point(48, 24), new Point(48, 25), new Point(48, 26),
+			new Point(48, 27), new Point(48, 28), new Point(48, 29), new Point(48, 30), new Point(48, 31),
+			new Point(49, 16), new Point(49, 17), new Point(49, 18), new Point(49, 19), new Point(49, 20),
+			new Point(49, 21), new Point(49, 22), new Point(49, 23), new Point(49, 24), new Point(49, 25),
+			new Point(49, 26), new Point(49, 27), new Point(49, 28), new Point(49, 29), new Point(49, 30),
+			new Point(49, 31), new Point(50, 16), new Point(50, 17), new Point(50, 18), new Point(50, 19),
+			new Point(50, 20), new Point(50, 21), new Point(50, 22), new Point(50, 23), new Point(50, 24),
+			new Point(50, 25), new Point(50, 26), new Point(50, 27), new Point(50, 28), new Point(50, 29),
+			new Point(50, 30), new Point(50, 31), new Point(51, 16), new Point(51, 17), new Point(51, 18),
+			new Point(51, 19), new Point(51, 20), new Point(51, 21), new Point(51, 22), new Point(51, 23),
+			new Point(51, 24), new Point(51, 25), new Point(51, 26), new Point(51, 27), new Point(51, 28),
+			new Point(51, 29), new Point(51, 30), new Point(51, 31), new Point(52, 20), new Point(52, 21),
+			new Point(52, 22), new Point(52, 23), new Point(52, 24), new Point(52, 25), new Point(52, 26),
+			new Point(52, 27), new Point(52, 28), new Point(52, 29), new Point(52, 30), new Point(52, 31),
+			new Point(53, 20), new Point(53, 21), new Point(53, 22), new Point(53, 23), new Point(53, 24),
+			new Point(53, 25), new Point(53, 26), new Point(53, 27), new Point(53, 28), new Point(53, 29),
+			new Point(53, 30), new Point(53, 31), new Point(54, 20), new Point(54, 21), new Point(54, 22),
+			new Point(54, 23), new Point(54, 24), new Point(54, 25), new Point(54, 26), new Point(54, 27),
+			new Point(54, 28), new Point(54, 29), new Point(54, 30), new Point(54, 31), new Point(55, 20),
+			new Point(55, 21), new Point(55, 22), new Point(55, 23), new Point(55, 24), new Point(55, 25),
+			new Point(55, 26), new Point(55, 27), new Point(55, 28), new Point(55, 29), new Point(55, 30),
+			new Point(55, 31) },
+			LEGACY_LEG = { new Point(0, 20), new Point(0, 21), new Point(0, 22), new Point(0, 23), new Point(0, 24),
+					new Point(0, 25), new Point(0, 26), new Point(0, 27), new Point(0, 28), new Point(0, 29),
+					new Point(0, 30), new Point(0, 31), new Point(1, 20), new Point(1, 21), new Point(1, 22),
+					new Point(1, 23), new Point(1, 24), new Point(1, 25), new Point(1, 26), new Point(1, 27),
+					new Point(1, 28), new Point(1, 29), new Point(1, 30), new Point(1, 31), new Point(2, 20),
+					new Point(2, 21), new Point(2, 22), new Point(2, 23), new Point(2, 24), new Point(2, 25),
+					new Point(2, 26), new Point(2, 27), new Point(2, 28), new Point(2, 29), new Point(2, 30),
+					new Point(2, 31), new Point(3, 20), new Point(3, 21), new Point(3, 22), new Point(3, 23),
+					new Point(3, 24), new Point(3, 25), new Point(3, 26), new Point(3, 27), new Point(3, 28),
+					new Point(3, 29), new Point(3, 30), new Point(3, 31), new Point(4, 16), new Point(4, 17),
+					new Point(4, 18), new Point(4, 19), new Point(4, 20), new Point(4, 21), new Point(4, 22),
+					new Point(4, 23), new Point(4, 24), new Point(4, 25), new Point(4, 26), new Point(4, 27),
+					new Point(4, 28), new Point(4, 29), new Point(4, 30), new Point(4, 31), new Point(5, 16),
+					new Point(5, 17), new Point(5, 18), new Point(5, 19), new Point(5, 20), new Point(5, 21),
+					new Point(5, 22), new Point(5, 23), new Point(5, 24), new Point(5, 25), new Point(5, 26),
+					new Point(5, 27), new Point(5, 28), new Point(5, 29), new Point(5, 30), new Point(5, 31),
+					new Point(6, 16), new Point(6, 17), new Point(6, 18), new Point(6, 19), new Point(6, 20),
+					new Point(6, 21), new Point(6, 22), new Point(6, 23), new Point(6, 24), new Point(6, 25),
+					new Point(6, 26), new Point(6, 27), new Point(6, 28), new Point(6, 29), new Point(6, 30),
+					new Point(6, 31), new Point(7, 16), new Point(7, 17), new Point(7, 18), new Point(7, 19),
+					new Point(7, 20), new Point(7, 21), new Point(7, 22), new Point(7, 23), new Point(7, 24),
+					new Point(7, 25), new Point(7, 26), new Point(7, 27), new Point(7, 28), new Point(7, 29),
+					new Point(7, 30), new Point(7, 31), new Point(8, 16), new Point(8, 17), new Point(8, 18),
+					new Point(8, 19), new Point(8, 20), new Point(8, 21), new Point(8, 22), new Point(8, 23),
+					new Point(8, 24), new Point(8, 25), new Point(8, 26), new Point(8, 27), new Point(8, 28),
+					new Point(8, 29), new Point(8, 30), new Point(8, 31), new Point(9, 16), new Point(9, 17),
+					new Point(9, 18), new Point(9, 19), new Point(9, 20), new Point(9, 21), new Point(9, 22),
+					new Point(9, 23), new Point(9, 24), new Point(9, 25), new Point(9, 26), new Point(9, 27),
+					new Point(9, 28), new Point(9, 29), new Point(9, 30), new Point(9, 31), new Point(10, 16),
+					new Point(10, 17), new Point(10, 18), new Point(10, 19), new Point(10, 20), new Point(10, 21),
+					new Point(10, 22), new Point(10, 23), new Point(10, 24), new Point(10, 25), new Point(10, 26),
+					new Point(10, 27), new Point(10, 28), new Point(10, 29), new Point(10, 30), new Point(10, 31),
+					new Point(11, 16), new Point(11, 17), new Point(11, 18), new Point(11, 19), new Point(11, 20),
+					new Point(11, 21), new Point(11, 22), new Point(11, 23), new Point(11, 24), new Point(11, 25),
+					new Point(11, 26), new Point(11, 27), new Point(11, 28), new Point(11, 29), new Point(11, 30),
+					new Point(11, 31), new Point(12, 20), new Point(12, 21), new Point(12, 22), new Point(12, 23),
+					new Point(12, 24), new Point(12, 25), new Point(12, 26), new Point(12, 27), new Point(12, 28),
+					new Point(12, 29), new Point(12, 30), new Point(12, 31), new Point(13, 20), new Point(13, 21),
+					new Point(13, 22), new Point(13, 23), new Point(13, 24), new Point(13, 25), new Point(13, 26),
+					new Point(13, 27), new Point(13, 28), new Point(13, 29), new Point(13, 30), new Point(13, 31),
+					new Point(14, 20), new Point(14, 21), new Point(14, 22), new Point(14, 23), new Point(14, 24),
+					new Point(14, 25), new Point(14, 26), new Point(14, 27), new Point(14, 28), new Point(14, 29),
+					new Point(14, 30), new Point(14, 31), new Point(15, 20), new Point(15, 21), new Point(15, 22),
+					new Point(15, 23), new Point(15, 24), new Point(15, 25), new Point(15, 26), new Point(15, 27),
+					new Point(15, 28), new Point(15, 29), new Point(15, 30), new Point(15, 31) },
+			SECOND_ARM = { new Point(32, 52), new Point(32, 53), new Point(32, 54), new Point(32, 55),
+					new Point(32, 56), new Point(32, 57), new Point(32, 58), new Point(32, 59), new Point(32, 60),
+					new Point(32, 61), new Point(32, 62), new Point(32, 63), new Point(33, 52), new Point(33, 53),
+					new Point(33, 54), new Point(33, 55), new Point(33, 56), new Point(33, 57), new Point(33, 58),
+					new Point(33, 59), new Point(33, 60), new Point(33, 61), new Point(33, 62), new Point(33, 63),
+					new Point(34, 52), new Point(34, 53), new Point(34, 54), new Point(34, 55), new Point(34, 56),
+					new Point(34, 57), new Point(34, 58), new Point(34, 59), new Point(34, 60), new Point(34, 61),
+					new Point(34, 62), new Point(34, 63), new Point(35, 52), new Point(35, 53), new Point(35, 54),
+					new Point(35, 55), new Point(35, 56), new Point(35, 57), new Point(35, 58), new Point(35, 59),
+					new Point(35, 60), new Point(35, 61), new Point(35, 62), new Point(35, 63), new Point(36, 48),
+					new Point(36, 49), new Point(36, 50), new Point(36, 51), new Point(36, 52), new Point(36, 53),
+					new Point(36, 54), new Point(36, 55), new Point(36, 56), new Point(36, 57), new Point(36, 58),
+					new Point(36, 59), new Point(36, 60), new Point(36, 61), new Point(36, 62), new Point(36, 63),
+					new Point(37, 48), new Point(37, 49), new Point(37, 50), new Point(37, 51), new Point(37, 52),
+					new Point(37, 53), new Point(37, 54), new Point(37, 55), new Point(37, 56), new Point(37, 57),
+					new Point(37, 58), new Point(37, 59), new Point(37, 60), new Point(37, 61), new Point(37, 62),
+					new Point(37, 63), new Point(38, 48), new Point(38, 49), new Point(38, 50), new Point(38, 51),
+					new Point(38, 52), new Point(38, 53), new Point(38, 54), new Point(38, 55), new Point(38, 56),
+					new Point(38, 57), new Point(38, 58), new Point(38, 59), new Point(38, 60), new Point(38, 61),
+					new Point(38, 62), new Point(38, 63), new Point(39, 48), new Point(39, 49), new Point(39, 50),
+					new Point(39, 51), new Point(39, 52), new Point(39, 53), new Point(39, 54), new Point(39, 55),
+					new Point(39, 56), new Point(39, 57), new Point(39, 58), new Point(39, 59), new Point(39, 60),
+					new Point(39, 61), new Point(39, 62), new Point(39, 63), new Point(40, 48), new Point(40, 49),
+					new Point(40, 50), new Point(40, 51), new Point(40, 52), new Point(40, 53), new Point(40, 54),
+					new Point(40, 55), new Point(40, 56), new Point(40, 57), new Point(40, 58), new Point(40, 59),
+					new Point(40, 60), new Point(40, 61), new Point(40, 62), new Point(40, 63), new Point(41, 48),
+					new Point(41, 49), new Point(41, 50), new Point(41, 51), new Point(41, 52), new Point(41, 53),
+					new Point(41, 54), new Point(41, 55), new Point(41, 56), new Point(41, 57), new Point(41, 58),
+					new Point(41, 59), new Point(41, 60), new Point(41, 61), new Point(41, 62), new Point(41, 63),
+					new Point(42, 48), new Point(42, 49), new Point(42, 50), new Point(42, 51), new Point(42, 52),
+					new Point(42, 53), new Point(42, 54), new Point(42, 55), new Point(42, 56), new Point(42, 57),
+					new Point(42, 58), new Point(42, 59), new Point(42, 60), new Point(42, 61), new Point(42, 62),
+					new Point(42, 63), new Point(43, 48), new Point(43, 49), new Point(43, 50), new Point(43, 51),
+					new Point(43, 52), new Point(43, 53), new Point(43, 54), new Point(43, 55), new Point(43, 56),
+					new Point(43, 57), new Point(43, 58), new Point(43, 59), new Point(43, 60), new Point(43, 61),
+					new Point(43, 62), new Point(43, 63), new Point(44, 52), new Point(44, 53), new Point(44, 54),
+					new Point(44, 55), new Point(44, 56), new Point(44, 57), new Point(44, 58), new Point(44, 59),
+					new Point(44, 60), new Point(44, 61), new Point(44, 62), new Point(44, 63), new Point(45, 52),
+					new Point(45, 53), new Point(45, 54), new Point(45, 55), new Point(45, 56), new Point(45, 57),
+					new Point(45, 58), new Point(45, 59), new Point(45, 60), new Point(45, 61), new Point(45, 62),
+					new Point(45, 63), new Point(46, 52), new Point(46, 53), new Point(46, 54), new Point(46, 55),
+					new Point(46, 56), new Point(46, 57), new Point(46, 58), new Point(46, 59), new Point(46, 60),
+					new Point(46, 61), new Point(46, 62), new Point(46, 63), new Point(47, 52), new Point(47, 53),
+					new Point(47, 54), new Point(47, 55), new Point(47, 56), new Point(47, 57), new Point(47, 58),
+					new Point(47, 59), new Point(47, 60), new Point(47, 61), new Point(47, 62), new Point(47, 63) },
+			SECOND_LEG = { new Point(16, 52), new Point(16, 53), new Point(16, 54), new Point(16, 55),
+					new Point(16, 56), new Point(16, 57), new Point(16, 58), new Point(16, 59), new Point(16, 60),
+					new Point(16, 61), new Point(16, 62), new Point(16, 63), new Point(17, 52), new Point(17, 53),
+					new Point(17, 54), new Point(17, 55), new Point(17, 56), new Point(17, 57), new Point(17, 58),
+					new Point(17, 59), new Point(17, 60), new Point(17, 61), new Point(17, 62), new Point(17, 63),
+					new Point(18, 52), new Point(18, 53), new Point(18, 54), new Point(18, 55), new Point(18, 56),
+					new Point(18, 57), new Point(18, 58), new Point(18, 59), new Point(18, 60), new Point(18, 61),
+					new Point(18, 62), new Point(18, 63), new Point(19, 52), new Point(19, 53), new Point(19, 54),
+					new Point(19, 55), new Point(19, 56), new Point(19, 57), new Point(19, 58), new Point(19, 59),
+					new Point(19, 60), new Point(19, 61), new Point(19, 62), new Point(19, 63), new Point(20, 48),
+					new Point(20, 49), new Point(20, 50), new Point(20, 51), new Point(20, 52), new Point(20, 53),
+					new Point(20, 54), new Point(20, 55), new Point(20, 56), new Point(20, 57), new Point(20, 58),
+					new Point(20, 59), new Point(20, 60), new Point(20, 61), new Point(20, 62), new Point(20, 63),
+					new Point(21, 48), new Point(21, 49), new Point(21, 50), new Point(21, 51), new Point(21, 52),
+					new Point(21, 53), new Point(21, 54), new Point(21, 55), new Point(21, 56), new Point(21, 57),
+					new Point(21, 58), new Point(21, 59), new Point(21, 60), new Point(21, 61), new Point(21, 62),
+					new Point(21, 63), new Point(22, 48), new Point(22, 49), new Point(22, 50), new Point(22, 51),
+					new Point(22, 52), new Point(22, 53), new Point(22, 54), new Point(22, 55), new Point(22, 56),
+					new Point(22, 57), new Point(22, 58), new Point(22, 59), new Point(22, 60), new Point(22, 61),
+					new Point(22, 62), new Point(22, 63), new Point(23, 48), new Point(23, 49), new Point(23, 50),
+					new Point(23, 51), new Point(23, 52), new Point(23, 53), new Point(23, 54), new Point(23, 55),
+					new Point(23, 56), new Point(23, 57), new Point(23, 58), new Point(23, 59), new Point(23, 60),
+					new Point(23, 61), new Point(23, 62), new Point(23, 63), new Point(24, 48), new Point(24, 49),
+					new Point(24, 50), new Point(24, 51), new Point(24, 52), new Point(24, 53), new Point(24, 54),
+					new Point(24, 55), new Point(24, 56), new Point(24, 57), new Point(24, 58), new Point(24, 59),
+					new Point(24, 60), new Point(24, 61), new Point(24, 62), new Point(24, 63), new Point(25, 48),
+					new Point(25, 49), new Point(25, 50), new Point(25, 51), new Point(25, 52), new Point(25, 53),
+					new Point(25, 54), new Point(25, 55), new Point(25, 56), new Point(25, 57), new Point(25, 58),
+					new Point(25, 59), new Point(25, 60), new Point(25, 61), new Point(25, 62), new Point(25, 63),
+					new Point(26, 48), new Point(26, 49), new Point(26, 50), new Point(26, 51), new Point(26, 52),
+					new Point(26, 53), new Point(26, 54), new Point(26, 55), new Point(26, 56), new Point(26, 57),
+					new Point(26, 58), new Point(26, 59), new Point(26, 60), new Point(26, 61), new Point(26, 62),
+					new Point(26, 63), new Point(27, 48), new Point(27, 49), new Point(27, 50), new Point(27, 51),
+					new Point(27, 52), new Point(27, 53), new Point(27, 54), new Point(27, 55), new Point(27, 56),
+					new Point(27, 57), new Point(27, 58), new Point(27, 59), new Point(27, 60), new Point(27, 61),
+					new Point(27, 62), new Point(27, 63), new Point(28, 52), new Point(28, 53), new Point(28, 54),
+					new Point(28, 55), new Point(28, 56), new Point(28, 57), new Point(28, 58), new Point(28, 59),
+					new Point(28, 60), new Point(28, 61), new Point(28, 62), new Point(28, 63), new Point(29, 52),
+					new Point(29, 53), new Point(29, 54), new Point(29, 55), new Point(29, 56), new Point(29, 57),
+					new Point(29, 58), new Point(29, 59), new Point(29, 60), new Point(29, 61), new Point(29, 62),
+					new Point(29, 63), new Point(30, 52), new Point(30, 53), new Point(30, 54), new Point(30, 55),
+					new Point(30, 56), new Point(30, 57), new Point(30, 58), new Point(30, 59), new Point(30, 60),
+					new Point(30, 61), new Point(30, 62), new Point(30, 63), new Point(31, 52), new Point(31, 53),
+					new Point(31, 54), new Point(31, 55), new Point(31, 56), new Point(31, 57), new Point(31, 58),
+					new Point(31, 59), new Point(31, 60), new Point(31, 61), new Point(31, 62), new Point(31, 63) };
+
 	/** The Image-Type to use for {@link #toCleanSkin(BufferedImage)} */
 	private static final int IMAGE_TYPE = BufferedImage.TYPE_4BYTE_ABGR;
-
-	public static void main(String[] args) throws IOException {
-		String inFile = "notch.png";
-
-		File out = File.createTempFile("skinDB-Backend_", ".png");
-
-		InputStream in = SkinUtils.class.getResourceAsStream("/resources/skins/" + inFile);
-		BufferedImage img = ImageIO.read(in);
-		in.close();
-
-		if (hasSkinDimensions(img)) {
-			ImageIO.write(toCleanSkin(img), "PNG", out);
-			Desktop.getDesktop().open(out);
-
-			System.out.println("Done! - " + out.getAbsolutePath());
-		} else {
-			System.out.println("Wrong Dimensions! - " + img.getWidth() + "x" + img.getHeight());
-		}
-	}
 
 	/**
 	 * Returns a new {@link BufferedImage} that is completely clean.<br>
@@ -700,25 +860,88 @@ public class SkinUtils {
 	public static BufferedImage toCleanSkin(BufferedImage img) {
 		BufferedImage newImg = new BufferedImage(64, 64, IMAGE_TYPE);
 
+		// Transparent background
+		Graphics2D g = newImg.createGraphics();
+		g.setComposite(AlphaComposite.Clear);
+		g.fillRect(0, 0, 64, 64);
+		g.dispose();
+
+		boolean hasOverlay = hasOverlay(img);
+
 		for (Point p : SKIN_3PX) {
-			newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), false).getRGB());
-		}
-
-		for (Point p : SKIN_3PX_OVERLAY) {
-			newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), true).getRGB());
-		}
-
-		if (has4pxArms(img)) {
-			for (Point p : SKIN_4PX_DIFF) {
+			if (p.x < img.getWidth() && p.y < img.getHeight()) {
 				newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), false).getRGB());
 			}
+		}
 
-			for (Point p : SKIN_4PX_OVERLAY_DIFF) {
+		if (hasOverlay) {
+			for (Point p : SKIN_3PX_OVERLAY) {
 				newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), true).getRGB());
 			}
 		}
 
+		if (hasSteveArms(img)) {
+			for (Point p : SKIN_4PX_DIFF) {
+				if (p.x < img.getWidth() && p.y < img.getHeight()) {
+					newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), false).getRGB());
+				}
+			}
+
+			if (hasOverlay) {
+				for (Point p : SKIN_4PX_OVERLAY_DIFF) {
+					newImg.setRGB(p.x, p.y, new Color(img.getRGB(p.x, p.y), true).getRGB());
+				}
+			}
+		}
+
+		if (isLegacySkin(img)) {
+			for (int i = 0; i < SECOND_ARM.length; i++) {
+				Point p = SECOND_ARM[i], lP = LEGACY_ARM[i];
+				newImg.setRGB(p.x, p.y, new Color(img.getRGB(lP.x, lP.y), false).getRGB());
+			}
+
+			for (int i = 0; i < SECOND_LEG.length; i++) {
+				Point p = SECOND_LEG[i], lP = LEGACY_LEG[i];
+				newImg.setRGB(p.x, p.y, new Color(img.getRGB(lP.x, lP.y), false).getRGB());
+			}
+		}
+
 		return newImg;
+	}
+
+	/**
+	 * Checks if a skin has an overlay.<br>
+	 * If any of the overlay-pixels are not 100% transparent, the skin is considered
+	 * as having an overlay.
+	 *
+	 * @param img The Skin-Image to check
+	 * 
+	 * @return true, if it has an overlay
+	 * 
+	 * @see #hasSkinDimensions(BufferedImage)
+	 */
+	public static boolean hasOverlay(BufferedImage img) {
+		boolean has4pxArms = false;
+
+		if (img.getHeight() >= 64) {
+			for (Point p : SKIN_3PX_OVERLAY) {
+				if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
+					has4pxArms = true;
+					break;
+				}
+			}
+
+			if (!has4pxArms) {
+				for (Point p : SKIN_4PX_OVERLAY_DIFF) {
+					if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
+						has4pxArms = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return has4pxArms;
 	}
 
 	/**
@@ -732,18 +955,11 @@ public class SkinUtils {
 	 * 
 	 * @see #hasSkinDimensions(BufferedImage)
 	 */
-	public static boolean has4pxArms(BufferedImage img) {
+	public static boolean hasSteveArms(BufferedImage img) {
 		boolean has4pxArms = false;
 
 		for (Point p : SKIN_4PX_DIFF) {
-			if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
-				has4pxArms = true;
-				break;
-			}
-		}
-
-		if (!has4pxArms) {
-			for (Point p : SKIN_4PX_OVERLAY_DIFF) {
+			if (p.x < img.getWidth() && p.y < img.getHeight()) {
 				if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
 					has4pxArms = true;
 					break;
@@ -751,7 +967,31 @@ public class SkinUtils {
 			}
 		}
 
+		if (!has4pxArms) {
+			for (Point p : SKIN_4PX_OVERLAY_DIFF) {
+				if (p.x < img.getWidth() && p.y < img.getHeight()) {
+					if (new Color(img.getRGB(p.x, p.y), true).getAlpha() != 0) {
+						has4pxArms = true;
+						break;
+					}
+				}
+			}
+		}
+
 		return has4pxArms;
+	}
+
+	/**
+	 * Checks if a skin looks old (legacy/pre Minecraft 1.8)<br>
+	 *
+	 * @param img The Skin-Image to check
+	 * 
+	 * @return true, if it has an height of 32px
+	 * 
+	 * @see #hasSkinDimensions(BufferedImage)
+	 */
+	public static boolean isLegacySkin(BufferedImage img) {
+		return img.getHeight() == 32;
 	}
 
 	/**
@@ -762,6 +1002,6 @@ public class SkinUtils {
 	 * @return true, if the dimensions are official and supported
 	 */
 	public static boolean hasSkinDimensions(BufferedImage img) {
-		return img.getWidth() == 64 && img.getHeight() == 64;
+		return img.getWidth() == 64 && (img.getHeight() == 64 || img.getHeight() == 32);
 	}
 }

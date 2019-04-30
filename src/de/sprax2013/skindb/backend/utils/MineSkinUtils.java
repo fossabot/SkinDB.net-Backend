@@ -12,6 +12,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import de.sprax2013.skindb.backend.Main;
+
 public class MineSkinUtils {
 	private static final int SIZE = 16;
 
@@ -28,10 +30,6 @@ public class MineSkinUtils {
 					pages = 25;
 				}
 
-//				if (total % 16 != 0) {
-//					pages++;
-//				}
-
 				for (int i = 1; i <= pages; i++) {
 					System.out.println("Page " + i + " of " + pages + "[" + round((i / (double) pages) * 100) + "%]");
 
@@ -43,8 +41,9 @@ public class MineSkinUtils {
 							try {
 								String skinURL = elem.getAsJsonObject().get("url").getAsString();
 
-								getResponse("https://api.sprax2013.de/skindb/provide?skin="
-										+ URLEncoder.encode(skinURL, "UTF-8"), "MineSkin (Backend-Import)");
+								getResponse(
+										"https://api.skindb.net/provide?data=" + URLEncoder.encode(skinURL, "UTF-8"),
+										"MineSkin (Backend-Import)");
 							} catch (Exception ex) {
 								ex.printStackTrace();
 							}
@@ -65,7 +64,7 @@ public class MineSkinUtils {
 	}
 
 	private static Response getResponse(String url) {
-		return getResponse(url, "SkinDB (Backend v0.1.3-DEV)");
+		return getResponse(url, "SkinDB (Backend v" + Main.VERSION + ")");
 	}
 
 	private static Response getResponse(String url, String userAgent) {

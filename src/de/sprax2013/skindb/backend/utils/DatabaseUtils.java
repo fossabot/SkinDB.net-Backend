@@ -14,80 +14,80 @@ import de.sprax2013.skindb.backend.constructors.PendingStatus;
 import de.sprax2013.skindb.backend.constructors.Skin;
 
 public class DatabaseUtils {
-	public static boolean createTables() {
-		boolean errored = false;
-
-		try (PreparedStatement pS = getConnection().prepareStatement(
-				"CREATE TABLE IF NOT EXISTS `Pending`(" + "`ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,"
-						+ "`SkinData` VARCHAR(255) NOT NULL COMMENT 'SkinURL or UUID' COLLATE 'utf8_unicode_ci',"
-						+ "`SkinID` INT(10) UNSIGNED NULL DEFAULT NULL COMMENT 'SkinID on success',"
-						+ "`UserAgent` TINYTEXT NULL COLLATE 'utf8_unicode_ci',"
-						+ "`Status` INT(11) NULL DEFAULT NULL COMMENT '0 and 1 are Non-Err'," + "PRIMARY KEY (`ID`),"
-						+ "INDEX `SkinID` (`SkinID`)" + ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;")) {
-			pS.execute();
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-
-			errored = true;
-		}
-
-		if (!errored) {
-			try (PreparedStatement pS = getConnection().prepareStatement(
-					"CREATE TABLE IF NOT EXISTS `Skins`(" + "`ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,"
-							+ "`MojangURL` VARCHAR(150) NOT NULL COLLATE 'utf8_unicode_ci',"
-							+ "`Hash` VARCHAR(64) NOT NULL COMMENT 'SHA-256' COLLATE 'utf8_unicode_ci',"
-							+ "`4px-Arms` TINYINT(1) UNSIGNED NULL DEFAULT NULL,"
-							+ "`DuplicateOf` INT(10) UNSIGNED NULL DEFAULT NULL COMMENT 'ID'," + "PRIMARY KEY (`ID`),"
-							+ "UNIQUE INDEX `MojangURL` (`MojangURL`)" + ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;")) {
-				pS.execute();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-
-				errored = true;
-			}
-		}
-
-		if (!errored) {
-			try (PreparedStatement pS = getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS `SkinTags`("
-					+ "`Skin` INT(10) UNSIGNED NOT NULL," + "`Tag` INT(10) UNSIGNED NOT NULL,"
-					+ "PRIMARY KEY (`Skin`, `Tag`)" + ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;")) {
-				pS.execute();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-
-				errored = true;
-			}
-		}
-
-		if (!errored) {
-			try (PreparedStatement pS = getConnection().prepareStatement(
-					"CREATE TABLE IF NOT EXISTS `TagCategory`(" + "`ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,"
-							+ "`Designation` VARCHAR(125) NOT NULL COLLATE 'utf8_unicode_ci'," + "PRIMARY KEY (`ID`)"
-							+ ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;")) {
-				pS.execute();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-
-				errored = true;
-			}
-		}
-
-		if (!errored) {
-			try (PreparedStatement pS = getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS `Tags`("
-					+ "`ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,"
-					+ "`Designation` VARCHAR(255) NOT NULL COMMENT 'Bezeichnung' COLLATE 'utf8_unicode_ci',"
-					+ "`Category` INT(10) UNSIGNED NULL DEFAULT NULL,PRIMARY KEY (`ID`),"
-					+ "UNIQUE INDEX `Designation` (`Designation`)" + ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;")) {
-				pS.execute();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-
-				errored = true;
-			}
-		}
-
-		return !errored;
-	}
+//	public static boolean createTables() {
+//		boolean errored = false;
+//
+//		try (PreparedStatement pS = getConnection().prepareStatement(
+//				"CREATE TABLE IF NOT EXISTS `Pending`(" + "`ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,"
+//						+ "`SkinData` VARCHAR(255) NOT NULL COMMENT 'SkinURL or UUID' COLLATE 'utf8_unicode_ci',"
+//						+ "`SkinID` INT(10) UNSIGNED NULL DEFAULT NULL COMMENT 'SkinID on success',"
+//						+ "`UserAgent` TINYTEXT NULL COLLATE 'utf8_unicode_ci',"
+//						+ "`Status` INT(11) NULL DEFAULT NULL COMMENT '0 and 1 are Non-Err'," + "PRIMARY KEY (`ID`),"
+//						+ "INDEX `SkinID` (`SkinID`)" + ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;")) {
+//			pS.execute();
+//		} catch (SQLException ex) {
+//			ex.printStackTrace();
+//
+//			errored = true;
+//		}
+//
+//		if (!errored) {
+//			try (PreparedStatement pS = getConnection().prepareStatement(
+//					"CREATE TABLE IF NOT EXISTS `Skins`(" + "`ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,"
+//							+ "`MojangURL` VARCHAR(150) NOT NULL COLLATE 'utf8_unicode_ci',"
+//							+ "`Hash` VARCHAR(64) NOT NULL COMMENT 'SHA-256' COLLATE 'utf8_unicode_ci',"
+//							+ "`4px-Arms` TINYINT(1) UNSIGNED NULL DEFAULT NULL,"
+//							+ "`DuplicateOf` INT(10) UNSIGNED NULL DEFAULT NULL COMMENT 'ID'," + "PRIMARY KEY (`ID`),"
+//							+ "UNIQUE INDEX `MojangURL` (`MojangURL`)" + ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;")) {
+//				pS.execute();
+//			} catch (SQLException ex) {
+//				ex.printStackTrace();
+//
+//				errored = true;
+//			}
+//		}
+//
+//		if (!errored) {
+//			try (PreparedStatement pS = getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS `SkinTags`("
+//					+ "`Skin` INT(10) UNSIGNED NOT NULL," + "`Tag` INT(10) UNSIGNED NOT NULL,"
+//					+ "PRIMARY KEY (`Skin`, `Tag`)" + ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;")) {
+//				pS.execute();
+//			} catch (SQLException ex) {
+//				ex.printStackTrace();
+//
+//				errored = true;
+//			}
+//		}
+//
+//		if (!errored) {
+//			try (PreparedStatement pS = getConnection().prepareStatement(
+//					"CREATE TABLE IF NOT EXISTS `TagCategory`(" + "`ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,"
+//							+ "`Designation` VARCHAR(125) NOT NULL COLLATE 'utf8_unicode_ci'," + "PRIMARY KEY (`ID`)"
+//							+ ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;")) {
+//				pS.execute();
+//			} catch (SQLException ex) {
+//				ex.printStackTrace();
+//
+//				errored = true;
+//			}
+//		}
+//
+//		if (!errored) {
+//			try (PreparedStatement pS = getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS `Tags`("
+//					+ "`ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,"
+//					+ "`Designation` VARCHAR(255) NOT NULL COMMENT 'Bezeichnung' COLLATE 'utf8_unicode_ci',"
+//					+ "`Category` INT(10) UNSIGNED NULL DEFAULT NULL,PRIMARY KEY (`ID`),"
+//					+ "UNIQUE INDEX `Designation` (`Designation`)" + ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;")) {
+//				pS.execute();
+//			} catch (SQLException ex) {
+//				ex.printStackTrace();
+//
+//				errored = true;
+//			}
+//		}
+//
+//		return !errored;
+//	}
 
 	public static Pending getNextPending() {
 		Pending result = null;
@@ -120,7 +120,11 @@ public class DatabaseUtils {
 	public static void setPending(Pending pending) {
 		try (PreparedStatement pS = getConnection().prepareStatement(
 				"REPLACE INTO `Pending`(`ID`,`SkinData`,`SkinID`,`UserAgent`,`Status`)VALUES(?,?,?,?,?);")) {
-			pS.setInt(1, pending.getID());
+			if (pending.hasID()) {
+				pS.setInt(1, pending.getID());
+			} else {
+				pS.setNull(1, Types.NULL);
+			}
 
 			pS.setString(2, pending.getData().toString());
 
@@ -152,7 +156,7 @@ public class DatabaseUtils {
 		Integer result = null;
 
 		try (PreparedStatement pS = getConnection()
-				.prepareStatement("SELECT `ID` FROM `Skins` WHERE `Hash` = ? LIMIT 1;")) {
+				.prepareStatement("SELECT `ID` FROM `Skins` WHERE `CleanHash` = ? LIMIT 1;")) {
 			pS.setString(1, hash);
 
 			ResultSet rs = pS.executeQuery();
@@ -183,8 +187,9 @@ public class DatabaseUtils {
 					duplicateOf = null;
 				}
 
-				return new Skin(rs.getInt("ID"), rs.getString("MojangURL"), rs.getString("Hash"),
-						rs.getBoolean("4px-Arms"), duplicateOf);
+				return new Skin(rs.getInt("ID"), rs.getString("MojangURL"), rs.getString("CleanHash"),
+						rs.getBoolean("HasOverlay"), rs.getBoolean("HasSteveArms"), duplicateOf,
+						rs.getTimestamp("KnownSince"));
 
 			}
 		} catch (SQLException ex) {
@@ -196,7 +201,7 @@ public class DatabaseUtils {
 
 	public static Skin getSkin(String hash) {
 		try (PreparedStatement pS = getConnection()
-				.prepareStatement("SELECT * FROM `Skins` WHERE `Hash` = ? LIMIT 1;")) {
+				.prepareStatement("SELECT * FROM `Skins` WHERE `CleanHash` = ? LIMIT 1;")) {
 			pS.setString(1, hash);
 
 			ResultSet rs = pS.executeQuery();
@@ -207,8 +212,9 @@ public class DatabaseUtils {
 					duplicateOf = null;
 				}
 
-				return new Skin(rs.getInt("ID"), rs.getString("MojangURL"), rs.getString("Hash"),
-						rs.getBoolean("4px-Arms"), duplicateOf);
+				return new Skin(rs.getInt("ID"), rs.getString("MojangURL"), rs.getString("CleanHash"),
+						rs.getBoolean("HasOverlay"), rs.getBoolean("HasSteveArms"), duplicateOf,
+						rs.getTimestamp("KnownSince"));
 
 			}
 		} catch (SQLException ex) {
@@ -220,7 +226,7 @@ public class DatabaseUtils {
 
 	public static void setSkin(Skin skin) {
 		try (PreparedStatement pS = getConnection().prepareStatement(
-				"REPLACE INTO `Skins`(`ID`,`MojangURL`,`Hash`,`4px-Arms`,`DuplicateOf`)VALUES(?,?,?,?,?);")) {
+				"REPLACE INTO `Skins`(`ID`,`MojangURL`,`CleanHash`,`HasOverlay`,`HasSteveArms`,`DuplicateOf`,`KnownSince`)VALUES(?,?,?,?,?,?,?);")) {
 			if (skin.hasID()) {
 				pS.setInt(1, skin.getID());
 			} else {
@@ -228,18 +234,30 @@ public class DatabaseUtils {
 			}
 
 			pS.setString(2, skin.getMojangURL());
-			pS.setString(3, skin.getHash());
+			pS.setString(3, skin.getCleanHash());
 
-			if (skin.has4pxArms()) {
-				pS.setBoolean(4, skin.has4pxArms());
+			if (skin.hasOverlay()) {
+				pS.setBoolean(4, skin.hasOverlay());
 			} else {
 				pS.setNull(4, Types.NULL);
 			}
 
-			if (skin.isDuplicate()) {
-				pS.setInt(5, skin.getDuplicateOf());
+			if (skin.hasSteveArms()) {
+				pS.setBoolean(5, skin.hasSteveArms());
 			} else {
 				pS.setNull(5, Types.NULL);
+			}
+
+			if (skin.isDuplicate()) {
+				pS.setInt(6, skin.getDuplicateOf());
+			} else {
+				pS.setNull(6, Types.NULL);
+			}
+
+			if (skin.getKnownSince() != null) {
+				pS.setTimestamp(7, skin.getKnownSince());
+			} else {
+				pS.setNull(7, Types.NULL);
 			}
 
 			pS.execute();
@@ -249,7 +267,7 @@ public class DatabaseUtils {
 	}
 
 	public static boolean canConnect() {
-		return getConnection() != null && createTables();
+		return getConnection() != null /* && createTables() */;
 	}
 
 	private static Connection getConnection() {

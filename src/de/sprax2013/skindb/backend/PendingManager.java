@@ -62,53 +62,58 @@ public class PendingManager {
 										}
 
 										if (url != null) {
-											File tmpFile = File.createTempFile("SkinDB-Backend_", ".png");
-											FileUtils.copyURLToFile(url, tmpFile);
+											if (isWhitelisted(url)) {
+												File tmpFile = File.createTempFile("SkinDB-Backend_", ".png");
+												FileUtils.copyURLToFile(url, tmpFile);
 
-											BufferedImage img = ImageIO.read(tmpFile);
-											tmpFile.delete();
+												BufferedImage img = ImageIO.read(tmpFile);
+												tmpFile.delete();
 
-											if (SkinUtils.hasSkinDimensions(img)) {
-												BufferedImage newImg = SkinUtils.toCleanSkin(img);
+												if (SkinUtils.hasSkinDimensions(img)) {
+													BufferedImage newImg = SkinUtils.toCleanSkin(img);
 
-												File newTmpFile = File.createTempFile("SkinDB-Backend_", ".png");
-												ImageIO.write(newImg, "PNG", newTmpFile);
+													File newTmpFile = File.createTempFile("SkinDB-Backend_", ".png");
+													ImageIO.write(newImg, "PNG", newTmpFile);
 
-												String hash = HashingUtils.getHash(newTmpFile);
-												boolean has4pxArms = SkinUtils.has4pxArms(newImg);
+													String cleanHash = HashingUtils.getHash(newTmpFile);
 
-												newTmpFile.delete();
+													newTmpFile.delete();
 
-												System.out.println("Saving a new Skin for ID " + pending.getID());
-												new Skin(url.toString(), hash, has4pxArms,
-														DatabaseUtils.getDuplicate(hash)).save();
+													System.out.println("Saving a new Skin for ID " + pending.getID());
+													new Skin(url.toString(), cleanHash, SkinUtils.hasOverlay(newImg),
+															SkinUtils.hasSteveArms(newImg),
+															DatabaseUtils.getDuplicate(cleanHash)).save();
 
-												Skin skin = DatabaseUtils.getSkin(hash);
-												if (skin != null) {
-													if (skin.isDuplicate()) {
-														pending.setStatus(PendingStatus.DUPLICATE);
+													Skin skin = DatabaseUtils.getSkin(cleanHash);
+													if (skin != null) {
+														if (skin.isDuplicate()) {
+															pending.setStatus(PendingStatus.DUPLICATE);
+														} else {
+															pending.setStatus(PendingStatus.SUCCESS);
+														}
+
+														try {
+															SkinAssetUtils.create(skin, img);
+														} catch (Throwable th) {
+															th.printStackTrace();
+														}
+
+														pending.setSkinID(skin.getID());
 													} else {
-														pending.setStatus(PendingStatus.SUCCESS);
+														pending.setStatus(PendingStatus.UNKNOWN_ERROR);
 													}
-
-													try {
-														SkinAssetUtils.create(skin, img);
-													} catch (Throwable th) {
-														th.printStackTrace();
-													}
-
-													pending.setSkinID(skin.getID());
 												} else {
-													pending.setStatus(PendingStatus.UNKNOWN_ERROR);
+													pending.setStatus(PendingStatus.WRONG_DIMENSIONS);
 												}
 											} else {
-												pending.setStatus(PendingStatus.WRONG_DIMENSIONS);
+												pending.setStatus(PendingStatus.NON_WHITELISTED_URL);
 											}
 										}
 									} catch (Throwable th) {
 										th.printStackTrace();
 
 										pending.setSkinID(null);
+										pending.setStatus(PendingStatus.UNKNOWN_ERROR);
 									}
 
 									System.out.println("Saving changes of PendingID " + pending.getID());
@@ -165,5 +170,16 @@ public class PendingManager {
 
 	static synchronized boolean shouldCheckDB() {
 		return checkDB;
+	}
+
+	/**
+	 * Checks if a Skin-URL is from an whitelisted host (to prevent IP leakage).
+	 *
+	 * @param url The url to check
+	 * 
+	 * @return true, if the host is whitelisted
+	 */
+	static boolean isWhitelisted(URL url) {
+		return url.getHost().equalsIgnoreCase("textures.minecraft.net");
 	}
 }

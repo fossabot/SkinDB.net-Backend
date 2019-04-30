@@ -73,7 +73,7 @@ public class ServerManager {
 								}
 							});
 						} catch (IOException ex) {
-							if (!ex.getMessage().equals("Socket closed")
+							if (!ex.getMessage().equalsIgnoreCase("socket closed")
 									&& !ex.getMessage().equals("Socket is closed")) {
 								ex.printStackTrace();
 							}
