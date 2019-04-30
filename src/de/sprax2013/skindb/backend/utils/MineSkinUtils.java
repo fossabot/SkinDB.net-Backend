@@ -43,8 +43,9 @@ public class MineSkinUtils {
 							try {
 								String skinURL = elem.getAsJsonObject().get("url").getAsString();
 
-								getResponse("https://api.sprax2013.de/skindb/provide?skin="
-										+ URLEncoder.encode(skinURL, "UTF-8"), "MineSkin (Backend-Import)");
+								getResponse(
+										"https://api.skindb.net/provide?data=" + URLEncoder.encode(skinURL, "UTF-8"),
+										"MineSkin (Backend-Import)");
 							} catch (Exception ex) {
 								ex.printStackTrace();
 							}
