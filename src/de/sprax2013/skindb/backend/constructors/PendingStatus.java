@@ -1,7 +1,7 @@
 package de.sprax2013.skindb.backend.constructors;
 
 public enum PendingStatus {
-	UNKNOWN_ERROR(0), SUCCESS(1), DUPLICATE(2), INVALID_DATA(3), WRONG_DIMENSIONS(4);
+	UNKNOWN_ERROR(0), SUCCESS(1), DUPLICATE(2), INVALID_DATA(3), WRONG_DIMENSIONS(4), NON_WHITELISTED_URL(5);
 
 	private final int id;
 
