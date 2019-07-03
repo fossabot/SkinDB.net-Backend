@@ -17,10 +17,6 @@ public class Skin {
 
 	private final Timestamp knownSince;
 
-//	public Skin(int id, String mojangURL, String cleanHash, boolean hasOverlay, boolean hasSteveArms) {
-//		this(id, mojangURL, cleanHash, hasOverlay, hasSteveArms, null, null);
-//	}
-
 	public Skin(String mojangURL, String cleanHash, boolean hasOverlay, boolean hasSteveArms, Integer duplicateOf) {
 		this(-1, mojangURL, cleanHash, hasOverlay, hasSteveArms, duplicateOf, null);
 	}
