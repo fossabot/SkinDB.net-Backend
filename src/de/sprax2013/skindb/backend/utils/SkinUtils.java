@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
 
 // TODO Add Support for notch's skin
 
@@ -1003,5 +1006,24 @@ public class SkinUtils {
 	 */
 	public static boolean hasSkinDimensions(BufferedImage img) {
 		return img.getWidth() == 64 && (img.getHeight() == 64 || img.getHeight() == 32);
+	}
+
+	public static void main(String[] args) throws Exception {
+		BufferedImage img = ImageIO.read(new File(
+				"C:\\Users\\Christian\\Desktop\\a76e9ed560865b515a6de28ec55abaed61ed4c8ed8ba9eb952551406abd4b97.png"));
+
+		String arr = "const Sprax2013=[";
+
+		for (int y = 0; y < img.getHeight(); y++) {
+			for (int x = 0; x < img.getWidth(); x++) {
+				Color c = new Color(img.getRGB(x, y), true);
+
+				arr += c.getRed() + "," + c.getGreen() + "," + c.getBlue() + "," + c.getAlpha() + ",";
+			}
+		}
+
+		arr += "]";
+
+		System.out.println(arr);
 	}
 }
