@@ -81,28 +81,34 @@ public class PendingManager {
 
 													newTmpFile.delete();
 
-													System.out.println("Saving a new Skin for ID " + pending.getID());
-													new Skin(url.toString(), cleanHash, SkinUtils.hasOverlay(newImg),
-															SkinUtils.hasSteveArms(newImg),
-															DatabaseUtils.getDuplicate(cleanHash)).save();
+													if (DatabaseUtils.getSkin(cleanHash) == null) {
+														System.out
+																.println("Saving a new Skin for ID " + pending.getID());
+														new Skin(url.toString(), cleanHash,
+																SkinUtils.hasOverlay(newImg),
+																SkinUtils.hasSteveArms(newImg),
+																DatabaseUtils.getDuplicate(cleanHash)).save();
 
-													Skin skin = DatabaseUtils.getSkin(cleanHash);
-													if (skin != null) {
-														if (skin.isDuplicate()) {
-															pending.setStatus(PendingStatus.DUPLICATE);
+														Skin skin = DatabaseUtils.getSkin(cleanHash);
+														if (skin != null) {
+															if (skin.isDuplicate()) {
+																pending.setStatus(PendingStatus.DUPLICATE);
+															} else {
+																pending.setStatus(PendingStatus.SUCCESS);
+															}
+
+															try {
+																SkinAssetUtils.create(skin, img);
+															} catch (Throwable th) {
+																th.printStackTrace();
+															}
+
+															pending.setSkinID(skin.getID());
 														} else {
-															pending.setStatus(PendingStatus.SUCCESS);
+															pending.setStatus(PendingStatus.UNKNOWN_ERROR);
 														}
-
-														try {
-															SkinAssetUtils.create(skin, img);
-														} catch (Throwable th) {
-															th.printStackTrace();
-														}
-
-														pending.setSkinID(skin.getID());
 													} else {
-														pending.setStatus(PendingStatus.UNKNOWN_ERROR);
+
 													}
 												} else {
 													pending.setStatus(PendingStatus.WRONG_DIMENSIONS);

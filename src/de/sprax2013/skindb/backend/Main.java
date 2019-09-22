@@ -46,11 +46,11 @@ public class Main {
 		if (props == null) {
 			props = new Properties();
 
-			props.setProperty("MySQL.Host", "localhost");
-			props.setProperty("MySQL.Port", "3306");
-			props.setProperty("MySQL.Username", "notRoot");
-			props.setProperty("MySQL.Password", "s3cr3t");
-			props.setProperty("MySQL.Database", "skinDB");
+			props.setProperty("Host", "localhost");
+			props.setProperty("Port", "5432");
+			props.setProperty("Username", "notRoot");
+			props.setProperty("Password", "s3cr3t");
+			props.setProperty("Database", "SkinDB");
 
 			File cfg = new File("config.properties");
 
