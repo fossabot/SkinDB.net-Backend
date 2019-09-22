@@ -44,7 +44,7 @@ public class ConsoleManager {
 							sc.close();
 							sc = null;
 
-							Runtime.getRuntime().exit(0);
+							System.exit(0);
 						}
 					} catch (Throwable th) {
 						th.printStackTrace();
