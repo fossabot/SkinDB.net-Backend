@@ -11,5 +11,3 @@ A huge Minecraft skin database that makes it possible to search for the skin of 
 **[@InventivetalentDev](https://github.com/InventivetalentDev)** for the frontend and enduring my questions!
 
 **[@tr7zw](https://github.com/tr7zw)** for a couple of great ideas, heping and enduring my questions!
-
-**[@NudelErde](https://github.com/NudelErde)** for providing a 3D-SkinRender functionality
