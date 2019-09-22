@@ -31,6 +31,7 @@ public class PendingManager {
 
 		if (DatabaseUtils.canConnect()) {
 			pool = Executors.newSingleThreadExecutor();
+
 			pool.execute(new Runnable() {
 				@Override
 				public void run() {
@@ -64,7 +65,8 @@ public class PendingManager {
 										if (url != null) {
 											if (isWhitelisted(url)) {
 												File tmpFile = File.createTempFile("SkinDB-Backend_", ".png");
-												FileUtils.copyURLToFile(url, tmpFile);
+												FileUtils.copyURLToFile(url, tmpFile); // Use https when possible
+																						// (#useHTTPS: boolean)
 
 												BufferedImage img = ImageIO.read(tmpFile);
 												tmpFile.delete();

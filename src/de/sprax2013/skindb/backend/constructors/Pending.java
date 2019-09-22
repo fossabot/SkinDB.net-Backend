@@ -57,10 +57,6 @@ public class Pending {
 		this.status = status;
 	}
 
-	public boolean hasStatus() {
-		return this.status != null;
-	}
-
 	public PendingStatus getStatus() {
 		return this.status;
 	}

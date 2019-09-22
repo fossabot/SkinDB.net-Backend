@@ -15,7 +15,9 @@ import com.google.gson.JsonParser;
 import de.sprax2013.skindb.backend.Main;
 
 public class MineSkinUtils {
-	private static final int SIZE = 16;
+	private static final int SIZE = 32;
+	
+//	https://api.mineskin.org/get/id/289288986
 
 	public static void importMineSkin() {
 		try {

@@ -13,6 +13,8 @@ public class Main {
 
 	private static Properties props;
 
+//	private static ScheduledExecutorService importThread = Executors.newScheduledThreadPool(1);
+
 	public static void main(String[] args) {
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			@Override
@@ -25,8 +27,15 @@ public class Main {
 			}
 		}));
 
-		if (PendingManager.init() && ServerManager.init()) {
+		if (PendingManager.init() /* && ServerManager.init() */) {
 			ConsoleManager.init();
+
+//			importThread.schedule(new Runnable() {
+//				@Override
+//				public void run() {
+//					MineSkinUtils.importMineSkin();
+//				}
+//			}, 3, TimeUnit.DAYS);
 		} else {
 			System.out.println("An error has occurred! Exiting...");
 			Runtime.getRuntime().exit(-1);
