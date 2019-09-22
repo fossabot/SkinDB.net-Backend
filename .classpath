@@ -7,7 +7,6 @@
 			<attribute name="javadoc_location" value="jar:file:/P:/Users/Christian/EclipseExternalFiles/Libs/Apache/Commons/IO/commons-io-2.5-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="P:/Users/Christian/EclipseExternalFiles/Libs/mysql-connector-java-8.0.16.jar"/>
 	<classpathentry kind="lib" path="P:/Users/Christian/EclipseExternalFiles/Libs/Google/gson/gson-2.8.0.jar" sourcepath="P:/Users/Christian/EclipseExternalFiles/Libs/Google/gson/gson-2.8.0-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:file:/P:/Users/Christian/EclipseExternalFiles/Libs/Google/gson/gson-2.8.0-javadoc.jar!/"/>
@@ -15,5 +14,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="P:/Users/Christian/EclipseWorkspace/CherryBread-Network/AdvancedDevUtils/bin"/>
 	<classpathentry kind="lib" path="P:/Users/Christian/EclipseWorkspace/CherryBread-Network/[Lib] jSoup/bin"/>
+	<classpathentry kind="lib" path="P:/Users/Christian/EclipseExternalFiles/Libs/postgresql-42.2.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
