@@ -17,6 +17,7 @@ public class Main {
         if (DatabaseUtils.canConnect() && SkinAssetUtils.isReady()) {
             QueueManager.init();
             MineSkinUtils.init();
+            
             System.out.println("Die Anwendung prüft nun regelmäßig die Warteschlange");
             ConsoleManager.init();
         } else {
