@@ -1,5 +1,6 @@
 package de.sprax2013.skindb.backend;
 
+import de.sprax2013.skindb.backend.utils.MineSkinUtils;
 import de.sprax2013.skindb.backend.utils.SkinAssetUtils;
 
 import java.util.Scanner;

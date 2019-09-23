@@ -1,4 +1,4 @@
-package de.sprax2013.skindb.backend;
+package de.sprax2013.skindb.backend.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,15 +13,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-class MineSkinUtils {
+public class MineSkinUtils {
     private static ScheduledExecutorService th = Executors.newSingleThreadScheduledExecutor();
 
-    static void init() {
+    public static void init() {
         th.scheduleAtFixedRate(() -> System.out.println("Es wurden " + importRecent() + " Skins aus MineSkin.org importiert"),
                 0, 1, TimeUnit.HOURS);
     }
 
-    static void deInit() {
+    public static void deInit() {
         th.shutdown();
 
         try {
@@ -33,7 +33,7 @@ class MineSkinUtils {
         th.shutdownNow();
     }
 
-    static int importRecent() {
+    public static int importRecent() {
         int newSkins = 0;
 
         int page = 1;

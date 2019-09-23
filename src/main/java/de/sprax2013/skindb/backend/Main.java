@@ -2,6 +2,7 @@ package de.sprax2013.skindb.backend;
 
 import de.sprax2013.skindb.backend.queue.QueueManager;
 import de.sprax2013.skindb.backend.utils.DatabaseUtils;
+import de.sprax2013.skindb.backend.utils.MineSkinUtils;
 import de.sprax2013.skindb.backend.utils.SkinAssetUtils;
 
 public class Main {
