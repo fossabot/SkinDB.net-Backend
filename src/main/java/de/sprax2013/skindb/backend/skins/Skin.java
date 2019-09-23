@@ -7,14 +7,14 @@ public class Skin {
 
     private final String hash, skinURL, textureValue, textureSignature;
 
-    private final boolean hasOverlay, isAlex;
+    private final boolean isAlex;
 
     private final long duplicateOf;
 
     private final Timestamp added;
 
     public Skin(long ID, String hash, String skinURL, String textureValue, String textureSignature,
-                boolean hasOverlay, boolean isAlex, long duplicateOf, Timestamp added) {
+                boolean isAlex, long duplicateOf, Timestamp added) {
         this.ID = ID;
 
         this.hash = hash;
@@ -22,7 +22,6 @@ public class Skin {
         this.textureValue = textureValue;
         this.textureSignature = textureSignature;
 
-        this.hasOverlay = hasOverlay;
         this.isAlex = isAlex;
         this.duplicateOf = duplicateOf;
 
@@ -50,11 +49,6 @@ public class Skin {
     @SuppressWarnings("unused")
     public String getTextureSignature() {
         return textureSignature;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean hasOverlay() {
-        return hasOverlay;
     }
 
     @SuppressWarnings("unused")

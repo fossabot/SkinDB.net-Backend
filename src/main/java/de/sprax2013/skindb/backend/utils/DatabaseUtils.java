@@ -4,7 +4,12 @@ import de.sprax2013.skindb.backend.queue.QueueObject;
 import de.sprax2013.skindb.backend.queue.QueueStatus;
 import de.sprax2013.skindb.backend.skins.Skin;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 
 public class DatabaseUtils {
     private static final String HOST = "localhost", PORT = "5432",
@@ -104,13 +109,13 @@ public class DatabaseUtils {
     }
 
     public static Skin createSkin(String hash, String skinURL, String textureValue, String textureSignature,
-                                  boolean hasOverlay, boolean isAlex, long duplicateOf) {
+                                  boolean isAlex, long duplicateOf) {
         try (PreparedStatement ps = getConnection()
                 .prepareStatement(
                         "INSERT INTO \"Skins\"" +
                                 "(\"CleanHash\", \"SkinURL\", \"TextureValue\", \"TextureSignature\", " +
-                                "\"HasOverlay\", \"IsAlex\", \"DuplicateOf\") " +
-                                "VALUES(?,?,?,?,?,?,?) RETURNING *;")) {
+                                "\"IsAlex\", \"DuplicateOf\") " +
+                                "VALUES(?,?,?,?,?,?) RETURNING *;")) {
             ps.setString(1, hash);
             ps.setString(2, skinURL);
 
@@ -126,13 +131,12 @@ public class DatabaseUtils {
                 ps.setNull(4, Types.NULL);
             }
 
-            ps.setBoolean(5, hasOverlay);
-            ps.setBoolean(6, isAlex);
+            ps.setBoolean(5, isAlex);
 
             if (duplicateOf > 0) {
-                ps.setLong(7, duplicateOf);
+                ps.setLong(6, duplicateOf);
             } else {
-                ps.setNull(7, Types.NULL);
+                ps.setNull(6, Types.NULL);
             }
 
             ResultSet rs = ps.executeQuery();
@@ -191,8 +195,9 @@ public class DatabaseUtils {
             duplicateOf = -1;
         }
 
-        return new Skin(rs.getLong("ID"), rs.getString("CleanHash"), rs.getString("SkinURL"), rs.getString(
-                "TextureValue"), rs.getString("TextureSignature"), rs.getBoolean("HasOverlay"),
-                rs.getBoolean("IsAlex"), duplicateOf, rs.getTimestamp("Added"));
+        return new Skin(rs.getLong("ID"), rs.getString("CleanHash"),
+                rs.getString("SkinURL"), rs.getString("TextureValue"),
+                rs.getString("TextureSignature"), rs.getBoolean("IsAlex"),
+                duplicateOf, rs.getTimestamp("Added"));
     }
 }

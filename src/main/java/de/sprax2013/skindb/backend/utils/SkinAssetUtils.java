@@ -40,7 +40,7 @@ public class SkinAssetUtils {
 
             if (!cleanSkinFile.exists()) {
                 cleanImg = cleanImg == null ?
-                        SkinUtils.toCleanSkin(img) :
+                        SkinUtils.removeUnusedSkinParts(SkinUtils.upgradeSkin(img)) :
                         copyImage(cleanImg);
 
                 ImageIO.write(cleanImg, "PNG", cleanSkinFile);

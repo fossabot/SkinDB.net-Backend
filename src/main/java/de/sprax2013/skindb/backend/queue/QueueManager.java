@@ -36,7 +36,8 @@ public class QueueManager {
                         BufferedImage img = ImageIO.read(tmpFile);
 
                         if (SkinUtils.hasSkinDimensions(img)) {
-                            BufferedImage cleanImg = SkinUtils.toCleanSkin(img);
+                            BufferedImage cleanImg = SkinUtils.removeUnusedSkinParts(SkinUtils.upgradeSkin(img));
+
                             ImageIO.write(cleanImg, "PNG", tmpFile);
 
                             String cleanHash = HashingUtils.getHash(tmpFile);
@@ -45,7 +46,7 @@ public class QueueManager {
                             if ((skin = DatabaseUtils.getSkin(cleanHash)) == null) {
                                 skin = DatabaseUtils.createSkin(cleanHash, normalizeURL(url),
                                         qObj.getTextureValue(), qObj.getTextureSignature(),
-                                        SkinUtils.hasOverlay(cleanImg), !SkinUtils.hasSteveArms(cleanImg), -1);
+                                        SkinUtils.isSlim(cleanImg), -1);
 
                                 if (skin != null) {
                                     SkinAssetUtils.create(skin, img, cleanImg);
@@ -58,8 +59,7 @@ public class QueueManager {
                             } else {
                                 Skin dupSkin = DatabaseUtils.createSkin(cleanHash, qObj.getSkinURL(),
                                         qObj.getTextureValue(), qObj.getTextureSignature(),
-                                        SkinUtils.hasOverlay(cleanImg), !SkinUtils.hasSteveArms(cleanImg),
-                                        skin.getID());
+                                        SkinUtils.isSlim(cleanImg), skin.getID());
 
                                 if (dupSkin != null) {
                                     SkinAssetUtils.create(dupSkin, img, cleanImg);
