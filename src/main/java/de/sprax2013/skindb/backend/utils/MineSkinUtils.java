@@ -9,6 +9,7 @@ import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,8 +18,10 @@ public class MineSkinUtils {
     private static ScheduledExecutorService th = Executors.newSingleThreadScheduledExecutor();
 
     public static void init() {
-        th.scheduleAtFixedRate(() -> System.out.println("Es wurden " + importRecent() + " Skins aus MineSkin.org importiert"),
-                0, 1, TimeUnit.HOURS);
+        th.scheduleAtFixedRate(() -> {
+                    System.out.println("Es wurden " + importRecent(() -> th.isShutdown()) + " Skins aus MineSkin.org importiert");
+                },
+                0, 30, TimeUnit.MINUTES);
     }
 
     public static void deInit() {
@@ -33,54 +36,65 @@ public class MineSkinUtils {
         th.shutdownNow();
     }
 
+
     public static int importRecent() {
+        return importRecent(() -> false);
+    }
+
+    private static int importRecent(Callable<Boolean> shouldBreakLoop) {
         int newSkins = 0;
 
         int page = 1;
-        while (page <= 10 && page > 0) {
-            try {
-                Connection.Response res = getConnection("https://api.mineskin.org/get/list/" + page + "?size=32");
+        try {
+            while (page <= 10 && page > 0 && !shouldBreakLoop.call()) {
+                try {
+                    Connection.Response res = getConnection("https://api.mineskin.org/get/list/" + page + "?size=32");
 
-                if (res.statusCode() > 399) {
-                    System.out.println(("https://api.mineskin.org/get/list/" + page + "?size=32") +
-                            " returned HTTP-Status " + res.statusCode());
+                    if (res.statusCode() > 399) {
+                        System.out.println(("https://api.mineskin.org/get/list/" + page + "?size=32") +
+                                " returned HTTP-Status " + res.statusCode());
+                        break;
+                    }
+
+                    for (JsonElement skin : new JsonParser().parse(res.body()).getAsJsonObject().getAsJsonArray("skins")) {
+                        if (shouldBreakLoop.call()) break;
+
+                        res = getConnection("https://api.mineskin.org/get/id/" + skin.getAsJsonObject().get("id").getAsString());
+
+                        if (res.statusCode() > 399) {
+                            System.out.println(("https://api.mineskin.org/get/list/" + page + "?size=32") +
+                                    " returned HTTP-Status " + res.statusCode());
+                            page = -1;
+                            break;
+                        }
+
+                        JsonObject skinTex = new JsonParser().parse(res.body()).getAsJsonObject()
+                                .get("data").getAsJsonObject().get("texture").getAsJsonObject();
+
+                        res = getConnection("https://api.skindb.net/provide?value=" +
+                                encodeURIComponent(skinTex.get("value").getAsString()) +
+                                "&signature=" + encodeURIComponent(skinTex.get("signature").getAsString()));
+
+                        if (res.statusCode() > 399) {
+                            System.out.println(("https://api.mineskin.org/get/list/" + page + "?size=32") +
+                                    " returned HTTP-Status " + res.statusCode());
+                            page = -1;
+                            break;
+                        } else if (new JsonParser().parse(res.body()).getAsJsonObject().get("msg").getAsString().equalsIgnoreCase("The skin is already in the database")) {
+                            page = -1;
+                            break;
+                        }
+
+                        newSkins++;
+                    }
+                } catch (IOException ignored) {
                     break;
                 }
 
-                for (JsonElement skin : new JsonParser().parse(res.body()).getAsJsonObject().getAsJsonArray("skins")) {
-                    res = getConnection("https://api.mineskin.org/get/id/" + skin.getAsJsonObject().get("id").getAsString());
-
-                    if (res.statusCode() > 399) {
-                        System.out.println(("https://api.mineskin.org/get/list/" + page + "?size=32") +
-                                " returned HTTP-Status " + res.statusCode());
-                        page = -1;
-                        break;
-                    }
-
-                    JsonObject skinTex = new JsonParser().parse(res.body()).getAsJsonObject()
-                            .get("data").getAsJsonObject().get("texture").getAsJsonObject();
-
-                    res = getConnection("https://api.skindb.net/provide?value=" +
-                            encodeURIComponent(skinTex.get("value").getAsString()) +
-                            "&signature=" + encodeURIComponent(skinTex.get("signature").getAsString()));
-
-                    if (res.statusCode() > 399) {
-                        System.out.println(("https://api.mineskin.org/get/list/" + page + "?size=32") +
-                                " returned HTTP-Status " + res.statusCode());
-                        page = -1;
-                        break;
-                    } else if (new JsonParser().parse(res.body()).getAsJsonObject().get("msg").getAsString().equalsIgnoreCase("The skin is already in the database")) {
-                        page = -1;
-                        break;
-                    }
-
-                    newSkins++;
-                }
-            } catch (IOException ignored) {
-                break;
+                page++;
             }
-
-            page++;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         return newSkins;
