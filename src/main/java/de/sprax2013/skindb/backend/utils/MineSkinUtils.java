@@ -21,7 +21,7 @@ public class MineSkinUtils {
         th.scheduleAtFixedRate(() -> {
                     System.out.println("Es wurden " + importRecent(() -> th.isShutdown()) + " Skins aus MineSkin.org importiert");
                 },
-                0, 30, TimeUnit.MINUTES);
+                0, 10, TimeUnit.MINUTES);
     }
 
     public static void deInit() {
@@ -56,7 +56,8 @@ public class MineSkinUtils {
                         break;
                     }
 
-                    for (JsonElement skin : new JsonParser().parse(res.body()).getAsJsonObject().getAsJsonArray("skins")) {
+                    JsonParser parser = new JsonParser();
+                    for (JsonElement skin : parser.parse(res.body()).getAsJsonObject().getAsJsonArray("skins")) {
                         if (shouldBreakLoop.call()) break;
 
                         res = getConnection("https://api.mineskin.org/get/id/" + skin.getAsJsonObject().get("id").getAsString());
@@ -68,7 +69,7 @@ public class MineSkinUtils {
                             break;
                         }
 
-                        JsonObject skinTex = new JsonParser().parse(res.body()).getAsJsonObject()
+                        JsonObject skinTex = parser.parse(res.body()).getAsJsonObject()
                                 .get("data").getAsJsonObject().get("texture").getAsJsonObject();
 
                         res = getConnection("https://api.skindb.net/provide?value=" +
@@ -80,7 +81,7 @@ public class MineSkinUtils {
                                     " returned HTTP-Status " + res.statusCode());
                             page = -1;
                             break;
-                        } else if (new JsonParser().parse(res.body()).getAsJsonObject().get("msg").getAsString().equalsIgnoreCase("The skin is already in the database")) {
+                        } else if ("The skin is already in the database".equals(parser.parse(res.body()).getAsJsonObject().get("msg"))) {
                             page = -1;
                             break;
                         }
@@ -111,6 +112,8 @@ public class MineSkinUtils {
         if (url.toLowerCase().startsWith("https://mineskin.org")) {
             con.header("Origin", "https://mineskin.org");
             con.referrer("https://mineskin.org/");
+        } else if (url.toLowerCase().startsWith("https://api.sprax2013.de") || url.toLowerCase().startsWith("https://api.skindb.net")) {
+            con.header("User-Agent", "SkinDB-Backend (MineSkin Import)");
         }
 
         return con.execute();
