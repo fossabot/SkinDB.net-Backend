@@ -4,6 +4,10 @@ import de.sprax2013.skindb.backend.queue.QueueObject;
 import de.sprax2013.skindb.backend.queue.QueueStatus;
 import de.sprax2013.skindb.backend.skins.Skin;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -76,22 +80,6 @@ public class DatabaseUtils {
 
     /* Skins */
 
-//    public static Skin getSkin(long id) {
-//        try (PreparedStatement ps = getConnection().prepareStatement(
-//                "SELECT * FROM \"Skins\" WHERE \"ID\" =? LIMIT 1;")) {
-//            ps.setLong(1, id);
-//            ResultSet rs = ps.executeQuery();
-//
-//            if (rs.next()) {
-//                return toSkin(rs);
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        }
-//
-//        return null;
-//    }
-
     public static Skin getSkin(String hash) {
         try (PreparedStatement ps = getConnection().prepareStatement(
                 "SELECT * FROM \"Skins\" WHERE \"CleanHash\" =? LIMIT 1;")) {
@@ -149,6 +137,57 @@ public class DatabaseUtils {
         }
 
         return null;
+    }
+
+    public static Skin setSkinHash(long skinID, String hash) {
+        try (PreparedStatement ps = getConnection()
+                .prepareStatement(
+                        "UPDATE \"Skins\" SET \"CleanHash\"=? WHERE \"ID\"=? " +
+                                "RETURNING *;")) {
+            ps.setString(1, hash);
+            ps.setLong(2, skinID);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return toSkin(rs);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    static boolean createSkinImages(long skinID, BufferedImage original, BufferedImage clean) {
+        try (PreparedStatement ps = getConnection()
+                .prepareStatement(
+                        "INSERT INTO \"Images\"" +
+                                "(\"SkinID\", original, clean) " +
+                                "VALUES(?,?,?) ON CONFLICT DO NOTHING;")) {
+            ps.setLong(1, skinID);
+
+            ByteArrayOutputStream orgBytes = new ByteArrayOutputStream();
+            ImageIO.write(original, "PNG", orgBytes);
+            orgBytes.flush();
+
+            ByteArrayOutputStream cleanBytes = new ByteArrayOutputStream();
+            ImageIO.write(clean, "PNG", cleanBytes);
+            cleanBytes.flush();
+
+            ps.setBytes(2, orgBytes.toByteArray());
+            ps.setBytes(3, cleanBytes.toByteArray());
+
+            orgBytes.close();
+            cleanBytes.close();
+
+            ps.execute();
+            return true;
+        } catch (SQLException | IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
     }
 
     // Legacy - recode SkinAssetUtils#createAll and delete this method

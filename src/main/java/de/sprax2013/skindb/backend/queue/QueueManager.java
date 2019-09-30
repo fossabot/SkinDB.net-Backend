@@ -49,10 +49,12 @@ public class QueueManager {
                                         SkinUtils.isSlim(cleanImg), -1);
 
                                 if (skin != null) {
-                                    SkinAssetUtils.create(skin, img, cleanImg);
-
-                                    DatabaseUtils.updateQueueObject(qObj.getID(), skin.getID(), QueueStatus.SUCCESS);
-                                    System.out.println("Queue #" + qObj.getID() + " => Skin #" + skin.getID());
+                                    if (SkinAssetUtils.create(skin, img, cleanImg)) {
+                                        DatabaseUtils.updateQueueObject(qObj.getID(), skin.getID(), QueueStatus.SUCCESS);
+                                        System.out.println("Queue #" + qObj.getID() + " => Skin #" + skin.getID());
+                                    } else {
+                                        DatabaseUtils.updateQueueObject(qObj.getID(), -1, QueueStatus.COULD_NOT_STORE_IMAGES);
+                                    }
                                 } else {
                                     DatabaseUtils.updateQueueObject(qObj.getID(), -1, QueueStatus.UNKNOWN_ERROR);
                                 }
@@ -62,10 +64,7 @@ public class QueueManager {
                                         SkinUtils.isSlim(cleanImg), skin.getID());
 
                                 if (dupSkin != null) {
-                                    SkinAssetUtils.create(dupSkin, img, cleanImg);
-
-                                    DatabaseUtils.updateQueueObject(qObj.getID(), dupSkin.getID(),
-                                            QueueStatus.DUPLICATE);
+                                    DatabaseUtils.updateQueueObject(qObj.getID(), dupSkin.getID(), QueueStatus.DUPLICATE);
                                     System.out.println("Queue #" + qObj.getID() + " => Skin #" + dupSkin.getID() + " " +
                                             "(Duplicate of #" + skin.getID() + ")");
                                 } else {

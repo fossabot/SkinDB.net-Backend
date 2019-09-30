@@ -3,7 +3,6 @@ package de.sprax2013.skindb.backend;
 import de.sprax2013.skindb.backend.queue.QueueManager;
 import de.sprax2013.skindb.backend.utils.DatabaseUtils;
 import de.sprax2013.skindb.backend.utils.MineSkinUtils;
-import de.sprax2013.skindb.backend.utils.SkinAssetUtils;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,7 +14,7 @@ public class Main {
             DatabaseUtils.deInit();
         }));
 
-        if (DatabaseUtils.canConnect() && SkinAssetUtils.isReady()) {
+        if (DatabaseUtils.canConnect()) {
             QueueManager.init();
             MineSkinUtils.init();
 
@@ -24,16 +23,6 @@ public class Main {
         } else {
             if (!DatabaseUtils.canConnect()) {
                 System.err.println("Es konnte keine Verbindung mit der Datenbank hergestellt werden");
-            }
-
-            if (!SkinAssetUtils.isReady()) {
-                if (!SkinAssetUtils.getAssetDir().exists()) {
-                    System.err.println("Das Verzeichnis '" + SkinAssetUtils.getAssetDir().getAbsolutePath() +
-                            "' wurde nicht gefunden!");
-                } else {
-                    System.err.println("Für das Verzeichnis '" + SkinAssetUtils.getAssetDir().getAbsolutePath() +
-                            "' liegen nicht ausreichende Zugriffsrechte vor!");
-                }
             }
 
             System.exit(-1);
