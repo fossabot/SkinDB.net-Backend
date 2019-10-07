@@ -98,7 +98,7 @@ public class MineSkinUtils {
         return newSkins;
     }
 
-    public static Connection.Response getConnection(String url) throws IOException {
+    private static Connection.Response getConnection(String url) throws IOException {
         Connection con = Jsoup.connect(url).ignoreHttpErrors(true).ignoreContentType(true).followRedirects(true);
 
         con.header("Accept", "application/json, text/plain, */*");
