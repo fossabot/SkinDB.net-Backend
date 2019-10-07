@@ -36,17 +36,17 @@ public class HashingUtils {
     }
 
     private static String toHex(byte[] bytes) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
-        for (int i = 0; i < bytes.length; ++i) {
-            String hex = Integer.toHexString(255 & bytes[i]);
+        for (byte aByte : bytes) {
+            String hex = Integer.toHexString(255 & aByte);
             if (hex.length() == 1) {
-                result = result + '0';
+                result.append('0');
             }
 
-            result = result + hex;
+            result.append(hex);
         }
 
-        return result;
+        return result.toString();
     }
 }
