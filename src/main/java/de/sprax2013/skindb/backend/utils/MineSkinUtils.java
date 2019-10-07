@@ -54,8 +54,7 @@ public class MineSkinUtils {
                         break;
                     }
 
-                    JsonParser parser = new JsonParser();
-                    for (JsonElement skin : parser.parse(res.body()).getAsJsonObject().getAsJsonArray("skins")) {
+                    for (JsonElement skin : JsonParser.parseString(res.body()).getAsJsonObject().getAsJsonArray("skins")) {
                         if (shouldBreakLoop.call()) break;
 
                         res = getConnection("https://api.mineskin.org/get/id/" + skin.getAsJsonObject().get("id").getAsString());
@@ -67,7 +66,7 @@ public class MineSkinUtils {
                             break;
                         }
 
-                        JsonObject skinTex = parser.parse(res.body()).getAsJsonObject()
+                        JsonObject skinTex = JsonParser.parseString(res.body()).getAsJsonObject()
                                 .get("data").getAsJsonObject().get("texture").getAsJsonObject();
 
                         res = getConnection("https://api.skindb.net/provide?value=" +
@@ -79,7 +78,7 @@ public class MineSkinUtils {
                                     " returned HTTP-Status " + res.statusCode());
                             page = -1;
                             break;
-                        } else if ("The skin is already in the database".equals(parser.parse(res.body()).getAsJsonObject().get("msg"))) {
+                        } else if ("The skin is already in the database".equals(JsonParser.parseString(res.body()).getAsJsonObject().get("msg"))) {
                             page = -1;
                             break;
                         }
