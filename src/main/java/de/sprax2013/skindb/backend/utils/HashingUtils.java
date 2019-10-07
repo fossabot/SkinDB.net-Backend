@@ -13,7 +13,7 @@ public class HashingUtils {
         return getHash(file, "SHA-256");
     }
 
-    public static String getHash(File file, String algorithm) {
+    private static String getHash(File file, @SuppressWarnings("SameParameterValue") String algorithm) {
         if (file.exists() && file.isFile()) {
             try {
                 MessageDigest digest = MessageDigest.getInstance(algorithm);

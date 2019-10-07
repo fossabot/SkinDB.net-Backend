@@ -139,7 +139,7 @@ public class DatabaseUtils {
         return null;
     }
 
-    public static Skin setSkinHash(long skinID, String hash) {
+    static Skin setSkinHash(long skinID, String hash) {
         try (PreparedStatement ps = getConnection()
                 .prepareStatement(
                         "UPDATE \"Skins\" SET \"CleanHash\"=? WHERE \"ID\"=? " +

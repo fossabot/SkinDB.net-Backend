@@ -18,9 +18,7 @@ public class MineSkinUtils {
     private static ScheduledExecutorService th = Executors.newSingleThreadScheduledExecutor();
 
     public static void init() {
-        th.scheduleAtFixedRate(() -> {
-                    System.out.println("Es wurden " + importRecent(() -> th.isShutdown()) + " Skins aus MineSkin.org importiert");
-                },
+        th.scheduleAtFixedRate(() -> System.out.println("Es wurden " + importRecent(() -> th.isShutdown()) + " Skins aus MineSkin.org importiert"),
                 0, 10, TimeUnit.MINUTES);
     }
 

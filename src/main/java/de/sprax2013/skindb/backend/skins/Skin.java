@@ -56,6 +56,7 @@ public class Skin {
         return isAlex;
     }
 
+    @SuppressWarnings("unused")
     public long getDuplicateOf() {
         return duplicateOf;
     }
