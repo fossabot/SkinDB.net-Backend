@@ -68,6 +68,13 @@
         </resources>
     </build>
 
+    <repositories>
+        <repository>
+            <id>sprax-repo</id>
+            <url>https://repo.sprax2013.de/nexus/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>commons-io</groupId>
