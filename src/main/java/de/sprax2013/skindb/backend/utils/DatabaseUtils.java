@@ -96,6 +96,23 @@ public class DatabaseUtils {
         return null;
     }
 
+    // Legacy - recode SkinAssetUtils#createAll and delete this method
+    static Skin getSkin(int offset) {
+        try (PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM \"Skins\" ORDER BY \"ID\" LIMIT 1 OFFSET ?;")) {
+            ps.setInt(1, offset);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return toSkin(rs);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static Skin createSkin(String hash, String skinURL, String textureValue, String textureSignature,
                                   boolean isAlex, long duplicateOf) {
         try (PreparedStatement ps = getConnection()
@@ -188,23 +205,6 @@ public class DatabaseUtils {
         }
 
         return false;
-    }
-
-    // Legacy - recode SkinAssetUtils#createAll and delete this method
-    static Skin getSkin(int offset) {
-        try (PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM \"Skins\" ORDER BY \"ID\" LIMIT 1 OFFSET ?;")) {
-            ps.setInt(1, offset);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return toSkin(rs);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return null;
     }
 
     /* Connection */
