@@ -74,11 +74,14 @@ public class MineSkinUtils {
                                 "&signature=" + encodeURIComponent(skinTex.get("signature").getAsString()));
 
                         if (res.statusCode() > 399) {
-                            System.out.println(("https://api.mineskin.org/get/list/" + page + "?size=32") +
+                            System.out.println(("https://api.skindb.net/provide?value=" +
+                                    encodeURIComponent(skinTex.get("value").getAsString()) +
+                                    "&signature=" + encodeURIComponent(skinTex.get("signature").getAsString())) +
                                     " returned HTTP-Status " + res.statusCode());
                             page = -1;
                             break;
-                        } else if ("The skin is already in the database".equals(JsonParser.parseString(res.body()).getAsJsonObject().get("msg"))) {
+                        } else if (JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
+                                "The skin is already in the database".equals(JsonParser.parseString(res.body()).getAsJsonObject().get("msg").getAsString())) {
                             page = -1;
                             break;
                         }
