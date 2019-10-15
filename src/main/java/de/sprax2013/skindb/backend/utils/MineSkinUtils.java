@@ -80,7 +80,7 @@ public class MineSkinUtils {
                                     " returned HTTP-Status " + res.statusCode());
                             page = -1;
                             break;
-                        } else if (JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
+                        } else if (JsonParser.parseString(res.body()).isJsonObject() && JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
                                 "The skin is already in the database".equals(JsonParser.parseString(res.body()).getAsJsonObject().get("msg").getAsString())) {
                             page = -1;
                             break;

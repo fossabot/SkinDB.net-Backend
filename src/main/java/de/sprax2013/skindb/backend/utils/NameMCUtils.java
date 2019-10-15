@@ -70,7 +70,7 @@ public class NameMCUtils {
                             System.out.println(("https://api.skindb.net/provide?value=" + username) +
                                     " returned HTTP-Status " + res.statusCode());
                             continue;
-                        } else if (JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
+                        } else if (JsonParser.parseString(res.body()).isJsonObject() && JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
                                 "The skin is already in the database".equals(JsonParser.parseString(res.body()).getAsJsonObject().get("msg").getAsString())) {
                             continue;
                         }
@@ -117,7 +117,7 @@ public class NameMCUtils {
                         System.out.println(("https://api.skindb.net/provide?value=" + elem.text()) +
                                 " returned HTTP-Status " + res.statusCode());
                         continue;
-                    } else if (JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
+                    } else if (JsonParser.parseString(res.body()).isJsonObject() && JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
                             "The skin is already in the database".equals(JsonParser.parseString(res.body()).getAsJsonObject().get("msg").getAsString())) {
                         continue;
                     }
@@ -163,7 +163,7 @@ public class NameMCUtils {
                         System.out.println(("https://api.skindb.net/provide?value=" + elem.text()) +
                                 " returned HTTP-Status " + res.statusCode());
                         continue;
-                    } else if (JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
+                    } else if (JsonParser.parseString(res.body()).isJsonObject() && JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
                             "The skin is already in the database".equals(JsonParser.parseString(res.body()).getAsJsonObject().get("msg").getAsString())) {
                         continue;
                     }
@@ -209,7 +209,7 @@ public class NameMCUtils {
                         System.out.println(("https://api.skindb.net/provide?value=" + elem.text()) +
                                 " returned HTTP-Status " + res.statusCode());
                         continue;
-                    } else if (JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
+                    } else if (JsonParser.parseString(res.body()).isJsonObject() && JsonParser.parseString(res.body()).getAsJsonObject().has("msg") &&
                             "The skin is already in the database".equals(JsonParser.parseString(res.body()).getAsJsonObject().get("msg").getAsString())) {
                         continue;
                     }
@@ -237,7 +237,7 @@ public class NameMCUtils {
         if (url.toLowerCase().startsWith("https://namemc.com")) {
             con.referrer("https://namemc.com/");
         } else if (url.toLowerCase().startsWith("https://api.sprax2013.de") || url.toLowerCase().startsWith("https://api.skindb.net")) {
-            con.header("User-Agent", "SkinDB-Backend (MineSkin Import)");
+            con.header("User-Agent", "SkinDB-Backend (NameMC Import)");
         }
 
         return con.execute();
