@@ -1,5 +1,4 @@
-# SkinDB.net-Backend [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Sprax2013/SkinDB.net-Backend.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Sprax2013/SkinDB.net-Backend/context:java) [![Total alerts](https://img.shields.io/lgtm/alerts/g/Sprax2013/SkinDB.net-Backend.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Sprax2013/SkinDB.net-Backend/alerts/)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSprax2013%2FSkinDB.net-Backend.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FSprax2013%2FSkinDB.net-Backend?ref=badge_shield)
+# SkinDB.net-Backend [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Sprax2013/SkinDB.net-Backend.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Sprax2013/SkinDB.net-Backend/context:java) [![Total alerts](https://img.shields.io/lgtm/alerts/g/Sprax2013/SkinDB.net-Backend.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Sprax2013/SkinDB.net-Backend/alerts/) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSprax2013%2FSkinDB.net-Backend.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FSprax2013%2FSkinDB.net-Backend?ref=badge_shield)
 A huge Minecraft skin database that makes it possible to search for the skin of your choice.
 
 ***
